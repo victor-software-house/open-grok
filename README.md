@@ -19,7 +19,7 @@ A community-owned fork of [`xai-org/grok-build`](https://github.com/xai-org/grok
 
 The fork currently preserves the upstream Grok Build source and behavior. Upstream already includes a native Rust TUI, agent runtime, tools, ACP integration, xAI subscription authentication, and configurable OpenAI Chat Completions, OpenAI Responses, and Anthropic Messages endpoints.
 
-Before changing those systems, we are documenting how the published code actually works. The source-pinned architecture dossier lives under [`docs/architecture/`](docs/architecture/). The reviewed long-running objective and its evidence will live under [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/).
+Before changing those systems, we are documenting how the published code actually works. The source-pinned architecture dossier lives under [`docs/architecture/`](docs/architecture/). Goal discovery is underway under [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/); no invariant objective or implementation plan is approved yet.
 
 Do not treat the multi-provider roadmap as implemented yet.
 
@@ -57,8 +57,9 @@ The current artifact is still named `xai-grok-pager`; upstream releases install 
 
 ### open-grok documentation
 
+- [`docs/index.md`](docs/index.md) — complete documentation hub
 - [`docs/architecture/`](docs/architecture/) — current-state architecture dossier, source ledger, and documentation audit
-- [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/) — reviewed goal provenance, facts, plan, and final invariant objective
+- [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/) — goal discovery placeholder and future reviewed provenance package
 
 ### Upstream user documentation
 
@@ -66,7 +67,7 @@ The published upstream user guide remains available in:
 
 [`crates/codegen/xai-grok-pager/docs/user-guide/`](crates/codegen/xai-grok-pager/docs/user-guide/)
 
-It covers authentication, configuration, keyboard shortcuts, slash commands, themes, MCP, skills, plugins, hooks, headless mode, sandboxing, and sessions. The architecture audit will identify where those documents match the source and where this fork needs additional developer documentation.
+It covers authentication, configuration, keyboard shortcuts, slash commands, themes, MCP, skills, plugins, hooks, headless mode, sandboxing, and sessions. [`docs/architecture/documentation-audit.md`](docs/architecture/documentation-audit.md) records where those documents match the source, where discovery is incomplete, and which developer documentation was missing.
 
 ## Repository layout
 
@@ -79,7 +80,7 @@ It covers authentication, configuration, keyboard shortcuts, slash commands, the
 | `crates/codegen/xai-grok-tools` | Tool implementations |
 | `crates/codegen/xai-grok-workspace` | Filesystem, VCS, execution, and checkpoints |
 | `docs/architecture` | open-grok current-state architecture documentation |
-| `goals/open-grok-provider-platform` | Reviewed long-running goal package |
+| `goals/open-grok-provider-platform` | Goal discovery placeholder; future facts, plan, and invariant objective |
 | `third_party` | Vendored source and its license notices |
 
 The root [`Cargo.toml`](Cargo.toml) is generated upstream. Treat it as read-only unless the generation source and synchronization model are understood.
