@@ -1,128 +1,113 @@
 <div align="center">
 
-<h1>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://media.x.ai/v1/website/spacexai-symbol-white-transparent-0c31957f.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://media.x.ai/v1/website/spacexai-symbol-black-transparent-6435cf42.png">
-    <img alt="SpaceXAI logo" src="https://media.x.ai/v1/website/spacexai-symbol-black-transparent-6435cf42.png" width="96">
-  </picture>
-  <br>
-  Grok Build (<code>grok</code>)
-</h1>
+# open-grok
 
-**Grok Build** is SpaceXAI's terminal-based AI coding agent. It runs as a
-full-screen TUI that understands your codebase, edits files, executes shell
-commands, searches the web, and manages long-running tasks — interactively,
-headlessly for scripting/CI, or embedded in editors via the Agent Client
-Protocol (ACP).
+**The Grok Build TUI, opened to every provider.**
 
-[Installing the released binary](#installing-the-released-binary) ·
-[Building from source](#building-from-source) ·
-[Documentation](#documentation) ·
-[Repository layout](#repository-layout) ·
-[Development](#development) ·
-[Contributing](#contributing) ·
-[License](#license)
+A community-owned fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build) focused on preserving its exceptional Rust terminal experience while making provider choice, authentication, model discovery, and account management first-class.
 
-![Grok Build TUI](https://media.x.ai/v1/website/universe-tui-screenshot-6f7a0837.png)
-
-**Learn more about Grok Build at [x.ai/cli](https://x.ai/cli)**
-
-This repository contains the Rust source for the `grok` CLI/TUI and its agent
-runtime. It is synced periodically from the SpaceXAI monorepo.
+[Status](#status) · [Direction](#direction) · [Build from source](#build-from-source) · [Documentation](#documentation) · [Upstream](#upstream-and-provenance) · [Contributing](#contributing)
 
 </div>
 
----
+> [!IMPORTANT]
+> `open-grok` is an independent community derivative. It is not affiliated with, endorsed by, or supported by xAI. Grok and xAI names remain the property of their respective owners and are used only to identify upstream provenance and compatibility.
 
-## Installing the released binary
+## Status
 
-Prebuilt binaries are published for macOS, Linux, and Windows:
+`open-grok` is in its architecture and foundation phase.
 
-```sh
-curl -fsSL https://x.ai/cli/install.sh | bash   # macOS / Linux / Git Bash
-irm https://x.ai/cli/install.ps1 | iex          # Windows PowerShell
-grok --version
-```
+The fork currently preserves the upstream Grok Build source and behavior. Upstream already includes a native Rust TUI, agent runtime, tools, ACP integration, xAI subscription authentication, and configurable OpenAI Chat Completions, OpenAI Responses, and Anthropic Messages endpoints.
 
-See the [changelog](https://x.ai/build/changelog) for the latest fixes,
-features, and improvements in each release.
+Before changing those systems, we are documenting how the published code actually works. The source-pinned architecture dossier lives under [`docs/architecture/`](docs/architecture/). The reviewed long-running objective and its evidence will live under [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/).
 
-## Building from source
+Do not treat the multi-provider roadmap as implemented yet.
+
+## Direction
+
+The project is being shaped around these invariants:
+
+- Preserve the full-screen Rust TUI and the capabilities available through vanilla Grok Build.
+- Keep Grok/xAI subscription OAuth as a first-party provider path.
+- Support most Pi and oh-my-pi providers through a coherent `/login` experience, including API keys, OAuth, safe credential persistence, multiple accounts, refresh, and controlled rotation.
+- Avoid maintaining a handwritten model list. External catalog data such as [`models.dev`](https://models.dev/) and authenticated provider discovery should supply model metadata and availability.
+- Allow built-in and custom providers to inherit shared behavior and override only what differs.
+- Support custom providers and models through YAML configuration early, before a broader provider-extension API.
+- Design internal boundaries that can later support provider registration, hooks, and marketplace extensions without freezing a speculative plugin ABI now.
+- Keep architecture claims tied to pinned source evidence. Latest Pi is the primary reference for modular provider abstractions; latest upstream oh-my-pi is a secondary reference for broader auth, account, catalog, and discovery behavior.
+
+These are direction-setting constraints, not an approved implementation design. The current codebase analysis comes first.
+
+## Build from source
 
 Requirements:
 
-- **Rust** — the toolchain is pinned by [`rust-toolchain.toml`](rust-toolchain.toml);
-  `rustup` installs it automatically on first build.
-- **protoc** — proto codegen resolves [`bin/protoc`](bin/protoc) (a
-  [dotslash](https://dotslash-cli.com) launcher) or falls back to a `protoc` on
-  `PATH` / `$PROTOC`.
-- macOS and Linux are supported build hosts; Windows builds are best-effort
-  and not currently tested from this tree.
+- **Rust** — pinned by [`rust-toolchain.toml`](rust-toolchain.toml)
+- **protoc** — resolved through [`bin/protoc`](bin/protoc) or `$PROTOC`
+- macOS or Linux; Windows remains best-effort in the published upstream tree
 
 ```sh
-cargo run -p xai-grok-pager-bin              # build + launch the TUI
-cargo build -p xai-grok-pager-bin --release  # release binary: target/release/xai-grok-pager
-cargo check -p xai-grok-pager-bin            # fast validation
+cargo run -p xai-grok-pager-bin
+cargo check -p xai-grok-pager-bin
 ```
 
-The binary artifact is named `xai-grok-pager`; official installs ship it as
-`grok`. On first launch it opens your browser to authenticate — see the
-[authentication guide](crates/codegen/xai-grok-pager/docs/user-guide/02-authentication.md).
+The current artifact is still named `xai-grok-pager`; upstream releases install it as `grok`. Independent package, executable, data-directory, and visual branding are pre-release work for this fork.
 
 ## Documentation
 
-Full online documentation is available at
-[docs.x.ai/build/overview](https://docs.x.ai/build/overview).
+### open-grok documentation
 
-The user guide ships with the pager crate:
+- [`docs/architecture/`](docs/architecture/) — current-state architecture dossier, source ledger, and documentation audit
+- [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/) — reviewed goal provenance, facts, plan, and final invariant objective
+
+### Upstream user documentation
+
+The published upstream user guide remains available in:
+
 [`crates/codegen/xai-grok-pager/docs/user-guide/`](crates/codegen/xai-grok-pager/docs/user-guide/)
-— getting started, keyboard shortcuts, slash commands, configuration, theming,
-MCP servers, skills, plugins, hooks, headless mode, sandboxing, and more.
+
+It covers authentication, configuration, keyboard shortcuts, slash commands, themes, MCP, skills, plugins, hooks, headless mode, sandboxing, and sessions. The architecture audit will identify where those documents match the source and where this fork needs additional developer documentation.
 
 ## Repository layout
 
-| Path | Contents |
-|------|----------|
-| `crates/codegen/xai-grok-pager-bin` | Composition-root package; builds the `xai-grok-pager` binary |
-| `crates/codegen/xai-grok-pager` | The TUI: scrollback, prompt, modals, rendering |
-| `crates/codegen/xai-grok-shell` | Agent runtime + leader/stdio/headless entry points |
-| `crates/codegen/xai-grok-tools` | Tool implementations (terminal, file edit, search, ...) |
-| `crates/codegen/xai-grok-workspace` | Host filesystem, VCS, execution, checkpoints |
-| `crates/codegen/...` | The rest of the CLI crate closure (config, MCP, markdown, sandbox, ...) |
-| `crates/common/`, `crates/build/`, `prod/mc/` | Small shared leaf crates pulled in by the closure |
-| `third_party/` | Vendored upstream source (Mermaid diagram stack) — see below |
+| Path | Responsibility |
+|---|---|
+| `crates/codegen/xai-grok-pager-bin` | Binary composition root |
+| `crates/codegen/xai-grok-pager` | Full-screen TUI and rendering |
+| `crates/codegen/xai-grok-shell` | Agent runtime, sessions, ACP, and headless entry points |
+| `crates/codegen/xai-grok-sampler` | Provider protocol requests and normalized sampling events |
+| `crates/codegen/xai-grok-tools` | Tool implementations |
+| `crates/codegen/xai-grok-workspace` | Filesystem, VCS, execution, and checkpoints |
+| `docs/architecture` | open-grok current-state architecture documentation |
+| `goals/open-grok-provider-platform` | Reviewed long-running goal package |
+| `third_party` | Vendored source and its license notices |
 
-> [!IMPORTANT]
-> The root `Cargo.toml` (workspace members, dependency versions, lints,
-> profiles) is **generated** — treat it as read-only. Prefer editing per-crate
-> `Cargo.toml` files.
+The root [`Cargo.toml`](Cargo.toml) is generated upstream. Treat it as read-only unless the generation source and synchronization model are understood.
 
-## Development
+## Upstream and provenance
 
-```sh
-cargo check -p <crate>        # always target specific crates; full-workspace builds are slow
-cargo test -p xai-grok-config # per-crate tests
-cargo clippy -p <crate>       # lint config: clippy.toml at the repo root
-cargo fmt --all               # rustfmt.toml at the repo root
-```
+This repository is a public GitHub fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build). The `upstream` Git remote tracks that source; `origin` tracks [`victor-software-house/open-grok`](https://github.com/victor-software-house/open-grok).
+
+Upstream periodically publishes from an internal monorepo. We will preserve an auditable upstream baseline, keep fork changes clearly separated, and retain all required Apache and third-party notices.
 
 ## Contributing
 
-> [!NOTE]
-> External contributions are not accepted. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+The project is opening its architecture before opening implementation broadly. Issues, source corrections, architecture evidence, and documentation improvements are welcome now. Provider implementation work should follow an approved repository goal and phased plan so the fork does not accumulate incompatible one-off integrations.
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## Security
+
+Report vulnerabilities privately through GitHub's private vulnerability reporting for this repository. See [`SECURITY.md`](SECURITY.md).
 
 ## License
 
-First-party code in this repository is licensed under the **Apache License,
-Version 2.0** — see [`LICENSE`](LICENSE).
+First-party upstream code is licensed under the **Apache License, Version 2.0**. See [`LICENSE`](LICENSE).
 
-Third-party and vendored code remains under its original licenses. See:
+Third-party and vendored code remains under its original licenses. Preserve:
 
-- [`THIRD-PARTY-NOTICES`](THIRD-PARTY-NOTICES) — crates.io / git dependencies,
-  bundled UI themes, and **in-tree source ports** (including openai/codex and
-  sst/opencode tool implementations)
+- [`THIRD-PARTY-NOTICES`](THIRD-PARTY-NOTICES)
 - [`crates/codegen/xai-grok-tools/THIRD_PARTY_NOTICES.md`](crates/codegen/xai-grok-tools/THIRD_PARTY_NOTICES.md)
-  — crate-local notice for the codex and opencode ports (license texts +
-  Apache §4(b) change notice)
-- [`third_party/NOTICE`](third_party/NOTICE) — vendored Mermaid-stack index
+- [`third_party/NOTICE`](third_party/NOTICE)
+
+Fork modifications will be marked and documented as required by Apache-2.0.
