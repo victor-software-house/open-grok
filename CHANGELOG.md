@@ -17,7 +17,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 ### Changed
 
 - Transferred the application repository to the dedicated [`open-grok`](https://github.com/open-grok) organization while preserving critical refs, protection, local work, and the xAI upstream remote.
-- Classified the rewritten xAI root as an audited synchronization candidate rather than replacing fork history or treating the reverted direct import as final integration.
+- Integrated xAI snapshot [`c68e39f`](https://github.com/xai-org/grok-build/tree/c68e39f60462f28d9be5e683d9cbe2c57b1a5027) through isolated synchronization PR #2, preserving fork history and importing its Pager navigation, session/runtime, permission, authentication, sandbox, workspace, and expanded PTY coverage changes.
+- Verified that the public `0.1.220-alpha.4` source builds its documented hardened production composition target under pinned Rust 1.92.0, while recording that it does not reproduce the installed signed `0.2.99` stable artifact exactly.
 
 ### Security
 
