@@ -4,7 +4,7 @@ Guidance for humans and coding agents working in `open-grok`.
 
 ## What this repository is
 
-`open-grok` is an independent community fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build), owned by `victor-software-house`.
+`open-grok` is an independent community fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build), owned by the open-grok organization.
 
 The project preserves Grok Build's exceptional Rust TUI and agent runtime while opening provider choice, authentication, model discovery, and account management.
 
@@ -12,17 +12,7 @@ It is not affiliated with, endorsed by, or supported by xAI.
 
 ## Current phase
 
-The repository is in **architecture and foundation** work.
-
-Before implementation:
-
-1. understand the published source;
-2. document current behavior with pinned evidence;
-3. run goal discovery, interview, and fact review;
-4. review and approve the invariant objective and phased plan;
-5. implement only the active approved phase.
-
-Do not turn roadmap ideas into code before their phase is approved.
+The source-pinned architecture dossier and provider-platform goal and plan are accepted. Foundation and session implementation proceeds through the active approved checkpoints. Code outside the active phase is forbidden.
 
 ## Sources of truth
 
@@ -31,8 +21,11 @@ Do not turn roadmap ideas into code before their phase is approved.
 | Current Grok behavior | Pinned `xai-org/grok-build` source mirrored in this fork |
 | Repository architecture | [`docs/architecture/`](docs/architecture/) |
 | Evidence revisions | [`docs/architecture/source-ledger.md`](docs/architecture/source-ledger.md) |
+| Accepted decisions | [`docs/decisions/`](docs/decisions/) |
+| Upstream imports | [`docs/upstream/`](docs/upstream/) |
+| User-visible history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Design patterns | Pi first, latest upstream OMP second |
-| Long-running objective | Discovery placeholder under [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/) until an objective and plan are reviewed and approved |
+| Long-running objective | [`goals/open-grok-provider-platform/goal.md`](goals/open-grok-provider-platform/goal.md), governed by the accepted facts, approved plan, invariant controller, and mutable execution state in that directory |
 | Coding rules | [`CODING_STANDARDS.md`](CODING_STANDARDS.md) |
 
 Private local forks and research repositories may suggest questions, but they are not authoritative evidence of upstream Pi or OMP behavior.
@@ -71,6 +64,7 @@ Start with:
 - **Trust remains explicit.** Marketplace installation does not imply executable-plugin trust.
 - **Grok remains first-party, not global.** xAI-specific headers, patches, OAuth, catalogs, and remote services must not leak into generic provider behavior.
 - **Catalog data is not transport policy.** External model metadata cannot replace provider-specific auth, protocol, and compatibility logic.
+- **Upstream rewrites are migrations.** Verify named upstream heads directly, preserve reviewed roots, and audit unrelated replacement histories before integrating them; never reset this fork to follow a rewritten root.
 
 ## Reference hierarchy
 
@@ -104,7 +98,7 @@ Do not copy TypeScript application structure blindly into Rust. Extract laws, co
 ## Documentation contract
 
 - Current-state claims use commit-pinned public links.
-- Mirrored Grok source links should stay inside `victor-software-house/open-grok`.
+- Mirrored Grok source links should stay inside `open-grok/open-grok`.
 - Pi/OMP/models.dev links point to their pinned upstream repositories.
 - Label facts, inference, recommendations, proposals, and unresolved questions distinctly.
 - Update the authoritative owner document instead of duplicating architecture prose.
@@ -133,9 +127,12 @@ Completion requires:
 
 ## Git and delivery
 
-- `origin` is `victor-software-house/open-grok`.
+- `origin` is `open-grok/open-grok`.
 - `upstream` is `xai-org/grok-build`.
 - Keep fork changes auditable and separate from upstream sync commits.
+- Every upstream import or evidence-pin advancement updates [`docs/upstream/`](docs/upstream/) and the root [`CHANGELOG.md`](CHANGELOG.md) when user-visible.
+- Every code synchronization uses an isolated `sync/*` pull request, required CI, and independent review; never push imported code directly to `main`.
+- Consequential technical and product/process choices receive ADRs or PDRs under [`docs/decisions/`](docs/decisions/); supersede accepted records instead of rewriting their rationale.
 - Use Conventional Commits unless the repository later adopts a stricter convention.
 - No AI attribution, generated-by footer, or bot co-author trailer.
 - Commit and push coherent verified changes; do not leave completed work local-only.

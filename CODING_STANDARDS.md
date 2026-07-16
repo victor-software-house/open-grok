@@ -107,7 +107,7 @@ Do not freeze a provider/plugin ABI before multiple built-in and configuration-d
 Behavior-sensitive external claims use commit-pinned public permalinks.
 
 ### §7.2 Repository-local Grok links
-When a mirrored baseline file exists in this fork, link to `victor-software-house/open-grok` at the pinned revision.
+When a mirrored baseline file exists in this fork, link to `open-grok/open-grok` at the pinned revision.
 
 ### §7.3 Reference order
 Use current Grok source first, Pi primary patterns second, and latest upstream OMP secondary patterns third.
@@ -117,6 +117,12 @@ Separate verified facts, local observations, inference, recommendations, proposa
 
 ### §7.5 Single document owner
 Each subsystem contract has one authoritative document. Other pages link to it rather than restating it.
+
+### §7.6 Upstream provenance is verified
+Resolve each named upstream repository, default branch, exact evidence pin, and current head directly; local checkouts do not establish authority or freshness. If upstream rewrites history, preserve the reviewed root and audit the tree-level delta before advancing pins or integrating changes. Never reset or force-replace fork history to follow an unrelated upstream root.
+
+### §7.7 Durable decisions use ADRs and PDRs
+Record consequential technical architecture decisions as ADRs and product, project, release, or maintenance-process decisions as PDRs under `docs/decisions/`. Accepted records are superseded by new records rather than rewritten to conceal prior context or trade-offs.
 
 ## §8 Tests and verification
 
@@ -159,3 +165,9 @@ Do not add AI attribution, generated-by footers, bot co-author trailers, or agen
 
 ### §10.4 Upstream clarity
 Keep upstream synchronization commits distinguishable from fork-owned product changes.
+
+### §10.5 Upstream change records
+Every imported upstream range or reviewed evidence-pin advancement must update the root changelog when user-visible and add an immutable record under `docs/upstream/` with source revisions, comparison status, preserved lineage, included and rejected scope, verification outcomes, integration commit, and follow-ups.
+
+### §10.6 Upstream code synchronizes through isolated pull requests
+Prepare code imports on `sync/<source>-<revision>`, include one upstream delta only, require CI and independent review, and merge through protected `main`. Architecture reinterpretation, fork-owned remediation, and unrelated cleanup follow separately.

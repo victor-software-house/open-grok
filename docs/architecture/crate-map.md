@@ -1,13 +1,13 @@
 # Cargo workspace map
 
-Baseline: [`xai-org/grok-build@c1b5909`](https://github.com/victor-software-house/open-grok/tree/c1b5909ec707c069f1d21a93917af044e71da0d7).
+Baseline: [`xai-org/grok-build@c1b5909`](https://github.com/open-grok/open-grok/tree/c1b5909ec707c069f1d21a93917af044e71da0d7).
 
 ## Scale and editing authority
 
 - The workspace declares **79 members**.
 - **75 crates** are first-party.
 - **4 workspace members** live under `third_party/`.
-- The root [`Cargo.toml`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/Cargo.toml#L1-L85) is explicitly generated.
+- The root [`Cargo.toml`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/Cargo.toml#L1-L85) is explicitly generated.
 - Per-crate manifests and source modules are the editing authority.
 
 ## Layer map
@@ -23,7 +23,7 @@ Baseline: [`xai-org/grok-build@c1b5909`](https://github.com/victor-software-hous
 | **`xai-grok-workspace`** | Filesystem, VCS, execution, worktrees, checkpoints, host workspace service |
 | **`ptyctl-cli` / `xai-grok-pager-pty-harness`** | Terminal and PTY diagnostics/testing |
 
-The main binary composition is visible in [`xai-grok-pager-bin/Cargo.toml`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager-bin/Cargo.toml#L7-L31).
+The main binary composition is visible in [`xai-grok-pager-bin/Cargo.toml`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager-bin/Cargo.toml#L7-L31).
 
 ### Agent, conversation, and product domain
 
@@ -44,7 +44,7 @@ The main binary composition is visible in [`xai-grok-pager-bin/Cargo.toml`](http
 
 - `xai-grok-tools` · concrete tool implementations
 - `xai-grok-tools-api` · generated protobuf API
-- `xai-grok-tools-api` consumers rely on Rust generated into `OUT_DIR`; [`build.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-tools-api/build.rs#L1-L34) delegates to [`xai-proto-build`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/build/xai-proto-build/src/lib.rs#L176-L214).
+- `xai-grok-tools-api` consumers rely on Rust generated into `OUT_DIR`; [`build.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-tools-api/build.rs#L1-L34) delegates to [`xai-proto-build`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/build/xai-proto-build/src/lib.rs#L176-L214).
 - `xai-tool-types`, `xai-tool-protocol`, `xai-tool-runtime` · shared tool contracts
 - `xai-grok-hooks`, `xai-hooks-plugins-types` · lifecycle hooks and plugin hook types
 - `xai-grok-mcp` · MCP integration
@@ -97,7 +97,7 @@ runnable binaries
 | **`xai-grok-tools`** | **15** | Tool implementation hub |
 | **`xai-grok-pager-bin`** | **12** | Product composition root |
 
-The Shell dependency surface is visible in [`xai-grok-shell/Cargo.toml`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/Cargo.toml#L13-L173).
+The Shell dependency surface is visible in [`xai-grok-shell/Cargo.toml`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/Cargo.toml#L13-L173).
 
 ### High fan-in contracts
 
@@ -114,7 +114,7 @@ These crates deserve compatibility-focused review because a small contract chang
 
 - Root workspace membership and dependency versions are generated.
 - Protobuf Rust is generated for `xai-grok-tools-api`.
-- `third_party/{dagre_rust,graphlib_rust,mermaid-to-svg,ordered_hashmap}` remain separate license and ownership domains. [`Cargo.toml`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/Cargo.toml#L80-L84)
+- `third_party/{dagre_rust,graphlib_rust,mermaid-to-svg,ordered_hashmap}` remain separate license and ownership domains. [`Cargo.toml`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/Cargo.toml#L80-L84)
 
 ## Practical navigation
 

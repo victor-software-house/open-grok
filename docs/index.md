@@ -11,11 +11,15 @@ This is the repository-owned documentation hub for `open-grok`.
 | **Trace one prompt end to end** | [`architecture/runtime.md`](architecture/runtime.md) |
 | **Understand models, providers, and authentication** | [`architecture/providers-and-auth.md`](architecture/providers-and-auth.md) |
 | **Understand sessions, files, tasks, and sandboxing** | [`architecture/state-and-execution.md`](architecture/state-and-execution.md) |
+| **Understand built-in tools, MCP, search, media, and permissions** | [`architecture/tools.md`](architecture/tools.md) |
 | **Understand plugins, hooks, skills, and MCP** | [`architecture/extensibility.md`](architecture/extensibility.md) |
 | **Review existing documentation coverage** | [`architecture/documentation-audit.md`](architecture/documentation-audit.md) |
 | **Compare Pi and OMP reference patterns** | [`architecture/reference-patterns.md`](architecture/reference-patterns.md) |
 | **Check evidence pins and authority** | [`architecture/source-ledger.md`](architecture/source-ledger.md) |
-| **Follow goal discovery and future approved objective** | [`../goals/open-grok-provider-platform/`](../goals/open-grok-provider-platform/) |
+| **Audit imported upstream changes** | [`upstream/README.md`](upstream/README.md) |
+| **Review architecture and product decisions** | [`decisions/README.md`](decisions/README.md) |
+| **Review user-facing project history** | [`../CHANGELOG.md`](../CHANGELOG.md) |
+| **Follow the active objective and phased implementation** | [`../goals/open-grok-provider-platform/`](../goals/open-grok-provider-platform/) |
 
 ## User guide
 

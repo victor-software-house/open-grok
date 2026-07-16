@@ -6,7 +6,7 @@
 
 A community-owned fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build) focused on preserving its exceptional Rust terminal experience while making provider choice, authentication, model discovery, and account management first-class.
 
-[Status](#status) · [Direction](#direction) · [Build from source](#build-from-source) · [Documentation](#documentation) · [Upstream](#upstream-and-provenance) · [Contributing](#contributing)
+[Status](#status) · [Direction](#direction) · [Build from source](#build-from-source) · [Documentation](#documentation) · [Changelog](CHANGELOG.md) · [Upstream](#upstream-and-provenance) · [Contributing](#contributing)
 
 </div>
 
@@ -19,7 +19,7 @@ A community-owned fork of [`xai-org/grok-build`](https://github.com/xai-org/grok
 
 The fork currently preserves the upstream Grok Build source and behavior. Upstream already includes a native Rust TUI, agent runtime, tools, ACP integration, xAI subscription authentication, and configurable OpenAI Chat Completions, OpenAI Responses, and Anthropic Messages endpoints.
 
-Before changing those systems, we are documenting how the published code actually works. The source-pinned architecture dossier lives under [`docs/architecture/`](docs/architecture/). Goal discovery is underway under [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/); no invariant objective or implementation plan is approved yet.
+The source-pinned architecture dossier lives under [`docs/architecture/`](docs/architecture/). The reviewed provider-platform objective, facts, and phased implementation plan live under [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/). Foundation implementation is underway; the multi-provider product is not yet released.
 
 Do not treat the multi-provider roadmap as implemented yet.
 
@@ -36,7 +36,7 @@ The project is being shaped around these invariants:
 - Design internal boundaries that can later support provider registration, hooks, and marketplace extensions without freezing a speculative plugin ABI now.
 - Keep architecture claims tied to pinned source evidence. Latest Pi is the primary reference for modular provider abstractions; latest upstream oh-my-pi is a secondary reference for broader auth, account, catalog, and discovery behavior.
 
-These are direction-setting constraints, not an approved implementation design. The current codebase analysis comes first.
+These constraints are now governed by the accepted facts and approved phased plan. Implementation proceeds in reviewed checkpoints, beginning with the public build and session experience rather than one-off provider integrations.
 
 ## Build from source
 
@@ -59,7 +59,10 @@ The current artifact is still named `xai-grok-pager`; upstream releases install 
 
 - [`docs/index.md`](docs/index.md) — complete documentation hub
 - [`docs/architecture/`](docs/architecture/) — current-state architecture dossier, source ledger, and documentation audit
-- [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/) — goal discovery placeholder and future reviewed provenance package
+- [`docs/upstream/`](docs/upstream/) — immutable upstream import and evidence-refresh records
+- [`docs/decisions/`](docs/decisions/) — architecture and product/process decision records
+- [`CHANGELOG.md`](CHANGELOG.md) — user-facing project history
+- [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/) — accepted facts, approved plan, invariant objective, controller, and execution state
 
 ### Upstream user documentation
 
@@ -80,20 +83,24 @@ It covers authentication, configuration, keyboard shortcuts, slash commands, the
 | `crates/codegen/xai-grok-tools` | Tool implementations |
 | `crates/codegen/xai-grok-workspace` | Filesystem, VCS, execution, and checkpoints |
 | `docs/architecture` | open-grok current-state architecture documentation |
-| `goals/open-grok-provider-platform` | Goal discovery placeholder; future facts, plan, and invariant objective |
+| `docs/upstream` | Auditable upstream imports, preserved revisions, and evidence-pin updates |
+| `docs/decisions` | Durable architecture and product/process decisions |
+| `goals/open-grok-provider-platform` | Accepted facts, approved plan, invariant objective, controller, and mutable execution state |
 | `third_party` | Vendored source and its license notices |
 
 The root [`Cargo.toml`](Cargo.toml) is generated upstream. Treat it as read-only unless the generation source and synchronization model are understood.
 
 ## Upstream and provenance
 
-This repository is a public GitHub fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build). The `upstream` Git remote tracks that source; `origin` tracks [`victor-software-house/open-grok`](https://github.com/victor-software-house/open-grok).
+This repository is a public GitHub fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build). The `upstream` Git remote tracks that source; `origin` tracks [`open-grok/open-grok`](https://github.com/open-grok/open-grok).
 
-Upstream periodically publishes from an internal monorepo. We will preserve an auditable upstream baseline, keep fork changes clearly separated, and retain all required Apache and third-party notices.
+Upstream periodically publishes from an internal monorepo. We preserve reviewed roots before integrating rewritten history, import accepted content through normal fork commits, keep fork changes clearly separated, and retain all required Apache and third-party notices.
+
+See the [`upstream change ledger`](docs/upstream/) for source revisions, comparison status, integration decisions, verification, and follow-ups.
 
 ## Contributing
 
-The project is opening its architecture before opening implementation broadly. Issues, source corrections, architecture evidence, and documentation improvements are welcome now. Provider implementation work should follow an approved repository goal and phased plan so the fork does not accumulate incompatible one-off integrations.
+The project is implementing its approved foundation in reviewed checkpoints. Issues, source corrections, architecture evidence, documentation improvements, and work aligned to the active plan are welcome; provider changes must follow the accepted contracts so the fork does not accumulate incompatible one-off integrations.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 

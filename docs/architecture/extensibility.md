@@ -1,6 +1,6 @@
 # Extensibility architecture
 
-Baseline: [`victor-software-house/open-grok@c1b5909`](https://github.com/victor-software-house/open-grok/tree/c1b5909ec707c069f1d21a93917af044e71da0d7).
+Baseline: [`open-grok/open-grok@c1b5909`](https://github.com/open-grok/open-grok/tree/c1b5909ec707c069f1d21a93917af044e71da0d7).
 
 The published system has broad **content and tool extensibility**, but model-provider protocols remain compiled Rust behavior.
 
@@ -17,7 +17,7 @@ Supported components include:
 - MCP servers;
 - LSP servers.
 
-The manifest supports both paths and inline definitions. [`manifest.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/manifest.rs#L132-L245)
+The manifest supports both paths and inline definitions. [`manifest.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/manifest.rs#L132-L245)
 
 Themes and model-protocol adapters are not plugin manifest components.
 
@@ -31,7 +31,7 @@ Plugin discovery covers:
 4. installed marketplaces;
 5. configured `[plugins].paths`.
 
-Canonical paths deduplicate repeated discoveries; scope precedence resolves name conflicts. [`discovery.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/discovery.rs#L267-L485)
+Canonical paths deduplicate repeated discoveries; scope precedence resolves name conflicts. [`discovery.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/discovery.rs#L267-L485)
 
 ## Trust boundary
 
@@ -42,7 +42,7 @@ A plugin must be both **enabled** and **trusted** before executable components r
 - Trusted canonical plugin roots are stored in `~/.grok/trusted-plugins`.
 - Config-path plugins under the user home may be automatically trusted.
 
-See [`trust.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/trust.rs#L1-L17) and [`trust.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/trust.rs#L60-L177).
+See [`trust.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/trust.rs#L1-L17) and [`trust.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/trust.rs#L60-L177).
 
 ## Marketplace
 
@@ -54,7 +54,7 @@ Supported sources include:
 - Claude-compatible `extraKnownMarketplaces`;
 - project `.claude/settings.json` enabled-plugin declarations.
 
-See [`hooks-and-plugins.md`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/docs/hooks-and-plugins.md#L75-L129) and [`marketplace.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/marketplace.rs#L1-L93).
+See [`hooks-and-plugins.md`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/docs/hooks-and-plugins.md#L75-L129) and [`marketplace.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/marketplace.rs#L1-L93).
 
 ## Hooks
 
@@ -68,7 +68,7 @@ The shared hook engine exposes events across:
 - subagent lifecycle;
 - compaction.
 
-`PreToolUse` is the only blocking hook event. `SubagentEnd` aliases `SubagentStop`. [`event.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-hooks/src/event.rs#L6-L149)
+`PreToolUse` is the only blocking hook event. `SubagentEnd` aliases `SubagentStop`. [`event.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-hooks/src/event.rs#L6-L149)
 
 Plugin hooks feed the common engine through an adapter that:
 
@@ -77,7 +77,7 @@ Plugin hooks feed the common engine through an adapter that:
 - injects protected `GROK_PLUGIN_*` values and compatibility aliases;
 - resolves plugin-root/data substitutions.
 
-See [`hooks_adapter.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/hooks_adapter.rs#L18-L195).
+See [`hooks_adapter.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/plugins/hooks_adapter.rs#L18-L195).
 
 ## Skills and commands
 
@@ -88,14 +88,14 @@ Skills are dynamic filesystem content.
 - Duplicates merge according to source precedence.
 - User documentation defines CWD → repository → user priority plus vendor-compatible roots and configured directories.
 
-See [`skills.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/prompt/skills.rs#L534-L616) and [`08-skills.md`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/docs/user-guide/08-skills.md#L15-L48).
+See [`skills.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/prompt/skills.rs#L534-L616) and [`08-skills.md`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/docs/user-guide/08-skills.md#L15-L48).
 
 Slash commands are:
 
 1. compiled built-ins;
 2. enabled, user-invocable skills.
 
-Built-ins win collisions; plugin `commands/*.md` therefore become skill-backed commands rather than independent executable code. [`slash_commands.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/slash_commands.rs#L301-L358)
+Built-ins win collisions; plugin `commands/*.md` therefore become skill-backed commands rather than independent executable code. [`slash_commands.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/slash_commands.rs#L301-L358)
 
 ## Agent definitions
 
@@ -116,7 +116,7 @@ An agent definition can constrain:
 - hooks;
 - subagents.
 
-See [`discovery.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/discovery.rs#L1-L112) and [`config.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/config.rs#L713-L816).
+See [`discovery.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/discovery.rs#L1-L112) and [`config.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-agent/src/config.rs#L713-L816).
 
 ## MCP precedence
 
@@ -128,7 +128,7 @@ The effective MCP set merges:
 4. Cursor JSON;
 5. project `.mcp.json`.
 
-Plugin MCP requires an enabled and trusted plugin. [`managed_mcp.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/managed_mcp.rs#L240-L349)
+Plugin MCP requires an enabled and trusted plugin. [`managed_mcp.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/managed_mcp.rs#L240-L349)
 
 ## LSP precedence
 
@@ -137,13 +137,13 @@ Plugin MCP requires an enabled and trusted plugin. [`managed_mcp.rs`](https://gi
 - Plugin definitions fill only unclaimed names.
 - Untrusted plugin LSP definitions are excluded.
 
-See [`lsp/config.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-tools/src/implementations/lsp/config.rs#L12-L104).
+See [`lsp/config.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-tools/src/implementations/lsp/config.rs#L12-L104).
 
 ## Themes
 
 Themes are compiled and selected through `[ui]` configuration.
 
-The user guide documents five built-ins plus `auto`; no dynamic theme loader exists in the plugin surfaces inspected. [`06-theming.md`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/docs/user-guide/06-theming.md#L1-L68)
+The user guide documents five built-ins plus `auto`; no dynamic theme loader exists in the plugin surfaces inspected. [`06-theming.md`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/docs/user-guide/06-theming.md#L1-L68)
 
 ## Model-provider boundary
 
@@ -157,7 +157,7 @@ Custom model configuration can provide:
 
 It cannot register an arbitrary protocol implementation.
 
-The protocol boundary is the closed `ApiBackend` enum plus Sampler request/stream translation. [`sampling-types/types.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampling-types/src/types.rs#L1010-L1029)
+The protocol boundary is the closed `ApiBackend` enum plus Sampler request/stream translation. [`sampling-types/types.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampling-types/src/types.rs#L1010-L1029)
 
 Therefore:
 
