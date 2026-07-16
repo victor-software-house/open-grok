@@ -2634,7 +2634,7 @@ async fn diagnostic_upload_skipped_for_opted_out_user() {
     let uploader = agent
         .diagnostic_upload_config()
         .expect("uploader is wired whenever trace upload config is on");
-    uploader(b"log".to_vec(), "tok".into(), "user-id-1".into()).await;
+    uploader(b"log".to_vec(), "tok".into(), "user@example.com".into()).await;
     assert_eq!(
         count.load(std::sync::atomic::Ordering::SeqCst),
         0,
@@ -2650,7 +2650,7 @@ async fn diagnostic_upload_sent_for_normal_user() {
     let uploader = agent
         .diagnostic_upload_config()
         .expect("uploader is wired whenever trace upload config is on");
-    uploader(b"log".to_vec(), "tok".into(), "user-id-1".into()).await;
+    uploader(b"log".to_vec(), "tok".into(), "user@example.com".into()).await;
     assert!(
         count.load(std::sync::atomic::Ordering::SeqCst) >= 1,
         "positive control: diagnostics upload reaches the proxy for a \
@@ -2669,7 +2669,7 @@ async fn diagnostic_upload_skipped_without_credentials() {
     let uploader = agent
         .diagnostic_upload_config()
         .expect("uploader is wired whenever trace upload config is on");
-    uploader(b"log".to_vec(), "tok".into(), "user-id-1".into()).await;
+    uploader(b"log".to_vec(), "tok".into(), "user@example.com".into()).await;
     assert_eq!(
         count.load(std::sync::atomic::Ordering::SeqCst),
         0,
@@ -2695,7 +2695,7 @@ async fn diagnostic_upload_skipped_after_mid_session_trace_upload_kill_switch() 
         cfg.telemetry.trace_upload = Some(false);
     }
     agent.sync_collection_config_gate();
-    uploader(b"log".to_vec(), "tok".into(), "user-id-1".into()).await;
+    uploader(b"log".to_vec(), "tok".into(), "user@example.com".into()).await;
     assert_eq!(
         count.load(std::sync::atomic::Ordering::SeqCst),
         0,

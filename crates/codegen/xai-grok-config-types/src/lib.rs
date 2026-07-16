@@ -227,8 +227,6 @@ pub struct RemoteSettings {
     /// When `Some(true)`, capture workspace files for non-git project dirs (client default: off).
     #[serde(default)]
     pub non_git_workspace_capture: Option<bool>,
-    #[serde(default)]
-    pub persistent_local_shell: Option<bool>,
     /// Release channel: `"stable"` or `"alpha"`.
     /// Fallback when no local `[cli] channel` or `--alpha`/`--stable` flag is set.
     #[serde(default)]

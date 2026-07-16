@@ -214,13 +214,9 @@ impl TokenRefresher for OidcRefresher {
             })),
         );
 
-        // Snapshot for diagnostic upload on failure (user id, never email).
+        // Snapshot for diagnostic upload on failure.
         let pre_token = crate::auth::model::token_suffix(&auth.key).to_owned();
-        let pre_user_id = if auth.user_id.is_empty() {
-            "unknown".into()
-        } else {
-            auth.user_id.clone()
-        };
+        let pre_email = auth.email.clone().unwrap_or_else(|| "unknown".into());
 
         match crate::auth::oidc::oidc_token_exchange(&auth).await {
             OidcRefreshResult::Success(new_auth) => {
@@ -237,12 +233,7 @@ impl TokenRefresher for OidcRefresher {
                 }
 
                 if let Some(uploader) = &self.diagnostic_uploader {
-                    spawn_diagnostic_upload(
-                        uploader,
-                        pre_token,
-                        pre_user_id,
-                        &self.upload_in_flight,
-                    );
+                    spawn_diagnostic_upload(uploader, pre_token, pre_email, &self.upload_in_flight);
                 }
                 RefreshOutcome::permanent(reason, Some(auth.key.clone()))
             }
@@ -268,12 +259,7 @@ impl TokenRefresher for OidcRefresher {
                     })),
                 );
                 if let Some(uploader) = &self.diagnostic_uploader {
-                    spawn_diagnostic_upload(
-                        uploader,
-                        pre_token,
-                        pre_user_id,
-                        &self.upload_in_flight,
-                    );
+                    spawn_diagnostic_upload(uploader, pre_token, pre_email, &self.upload_in_flight);
                 }
                 self.record_transient_failure(
                     "OIDC token refresh failed".into(),
@@ -285,11 +271,10 @@ impl TokenRefresher for OidcRefresher {
 }
 
 /// Fire-and-forget diagnostic log upload. Guarded against concurrent spawns.
-/// `user_id` is the GCS path segment (never email).
 fn spawn_diagnostic_upload(
     uploader: &DiagnosticUploader,
     auth_token: String,
-    user_id: String,
+    email: String,
     in_flight: &Arc<AtomicBool>,
 ) {
     if in_flight
@@ -325,7 +310,7 @@ fn spawn_diagnostic_upload(
             }
         };
 
-        uploader(log_bytes, auth_token, user_id).await;
+        uploader(log_bytes, auth_token, email).await;
         in_flight.store(false, Ordering::Release);
     });
 }

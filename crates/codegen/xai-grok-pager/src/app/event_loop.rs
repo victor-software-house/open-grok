@@ -957,12 +957,9 @@ pub(crate) async fn run(
         let wayland_clipboard_warning = all_warnings
             .iter()
             .find(|w| w.category == crate::diagnostics::WarningCategory::WaylandNoDataControl);
-        let sandbox_profile_warning =
-            crate::diagnostics::sandbox_profile_conflict_warning(&app.cwd);
         app.startup_warnings = crate::diagnostics::assemble_startup_warnings(
             wezterm_warning.as_ref(),
             wayland_clipboard_warning,
-            sandbox_profile_warning.as_ref(),
             crate::diagnostics::summarize_warnings(&all_warnings)
                 .into_iter()
                 .collect(),
