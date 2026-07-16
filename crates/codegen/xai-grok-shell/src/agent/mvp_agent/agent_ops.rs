@@ -2107,7 +2107,7 @@ impl MvpAgent {
             std::sync::Arc::new(move |
                 log_bytes: Vec<u8>,
                 auth_token: String,
-                email: String|
+                user_id: String|
             {
                 let proxy_base_url = proxy_base_url.clone();
                 let deployment_key = deployment_key.clone();
@@ -2131,7 +2131,7 @@ impl MvpAgent {
                     };
                     crate::upload::gcs::upload_to_auth_diagnostics(
                             &log_bytes,
-                            &email,
+                            &user_id,
                             &upload_method,
                             auth_manager,
                         )

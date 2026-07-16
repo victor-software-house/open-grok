@@ -9189,6 +9189,7 @@ agent_type = "cursor"
             url = "https://mcp.test.com"
             [toolset.bash]
             timeout_secs = 120
+            persistent_shell = true
             [shortcuts]
             ctrl_k = "search"
             [grok_com_config]
