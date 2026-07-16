@@ -32,7 +32,8 @@ A local checkout is never sufficient provenance. Verify the named upstream repos
 
 | Source | Date | Old revision | New revision | Result |
 |---|---|---|---|---|
-| [`xai-org/grok-build`](xai-grok-build/2026-07-15-b189869.md) | 2026-07-15 | `c1b5909…` | `b189869…` | Audited candidate; isolated synchronization PR required; original root preserved |
+| [`xai-org/grok-build`](xai-grok-build/2026-07-16-c68e39f.md) | 2026-07-16 | `c1b5909…` | `c68e39f…` | Exact 179-path delta integrated through PR #2; production composition target builds; public alpha source differs from installed stable artifact |
+| [`xai-org/grok-build`](xai-grok-build/2026-07-15-b189869.md) | 2026-07-15 | `c1b5909…` | `b189869…` | Audited intermediate replacement; superseded by the later `c68e39f…` snapshot |
 | [`openai/codex`](openai-codex/2026-07-16-2edad72.md) | 2026-07-16 | `78d4a56…` | `2edad72…` | Evidence-pin advancement; no code import |
 | [`can1357/oh-my-pi`](oh-my-pi/2026-07-16-03c48d0.md) | 2026-07-16 | `d5cd24f…` | `03c48d0…` | Evidence-pin advancement; usage fact clarified; no code import |
 
