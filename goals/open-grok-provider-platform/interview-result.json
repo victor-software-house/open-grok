@@ -1,0 +1,62 @@
+{
+  "decision": "submitted",
+  "stage": "interview",
+  "result": {
+    "stage": "interview",
+    "title": "open-grok provider platform",
+    "goalSlug": "open-grok-provider-platform",
+    "answers": [
+      {
+        "questionId": "runtime-foundation",
+        "selectedOptionIds": [
+          "native-rust"
+        ],
+        "customAnswer": null,
+        "answer": "Native Rust owns provider, authentication, catalog, protocol, usage, and dynamic-tool behavior; normal operation requires no Node/Bun sidecar.",
+        "completed": true,
+        "note": null
+      },
+      {
+        "questionId": "provider-parity",
+        "selectedOptionIds": [
+          "subscription-oauth",
+          "core-api-key",
+          "cloud-identity",
+          "local-gateway"
+        ],
+        "customAnswer": null,
+        "note": null,
+        "answer": "The first release covers subscription OAuth, core API-key providers, cloud identity, and local/gateway engines. Pi is the primary reference; reviewed OMP behavior supplements provider-specific gaps.",
+        "completed": true
+      },
+      {
+        "questionId": "credential-storage",
+        "selectedOptionIds": [
+          "keychain-plus-sqlite"
+        ],
+        "customAnswer": null,
+        "note": null,
+        "answer": "Credentials are isolated from shared configuration in a dedicated encrypted SQLite store; a random installation key is held by the native OS secret vault.",
+        "completed": true
+      },
+      {
+        "questionId": "catalog-authority",
+        "selectedOptionIds": [],
+        "customAnswer": null,
+        "answer": "Catalog freshness is independent of application releases. Reviewed Pi data is primary, OMP supplements Pi-missing OAuth/provider cases, provider-authoritative discovery may override snapshots, and an embedded seed remains available offline.",
+        "completed": true,
+        "note": null
+      },
+      {
+        "questionId": "first-milestone",
+        "selectedOptionIds": [
+          "foundation-vertical-slices"
+        ],
+        "customAnswer": null,
+        "note": null,
+        "answer": "Establish the provider/session foundations and prove focused vertical slices; local engines remain supported but do not delay hosted-provider, OAuth, cloud-identity, or session-experience correctness.",
+        "completed": true
+      }
+    ]
+  }
+}
