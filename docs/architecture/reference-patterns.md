@@ -61,25 +61,25 @@ _**Law:** one discoverable hub plus focused owner-adjacent pages beats a monolit
 
 ### 1. Multiple credentials need durable row identity
 
-Latest OMP stores multiple provider credentials in SQLite and routes by stable credential row identity rather than bearer bytes or array position. Session affinity persists against that ID. [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/packages/ai/src/auth-storage.ts#L1678-L1799)
+Latest OMP stores multiple provider credentials in SQLite and routes by stable credential row identity rather than bearer bytes or array position. Session affinity persists against that ID. [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/ai/src/auth-storage.ts#L1678-L1799)
 
 _**Pressure test:** Pi’s one-credential-per-provider store is insufficient for account selection, rotation, and failover._
 
 ### 2. Selection and failure are provider-account concerns
 
-OMP supports deterministic session affinity, round-robin for non-session callers, temporary credential blocking, and optional usage-aware ranking. [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/packages/ai/src/auth-storage.ts#L1496-L1538) · [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/packages/ai/src/auth-storage.ts#L1801-L1897)
+OMP supports deterministic session affinity, round-robin for non-session callers, temporary credential blocking, and optional usage-aware ranking. [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/ai/src/auth-storage.ts#L1496-L1538) · [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/ai/src/auth-storage.ts#L1801-L1897)
 
 _**Pressure test:** retries must distinguish transient request failure from account quota/usage exhaustion._
 
 ### 3. Refresh needs in-process and cross-process single-flight
 
-OMP refreshes before expiry, single-flights by durable row ID, and uses SQLite leases for cross-process ownership. [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/packages/ai/src/auth-storage.ts#L2130-L2339)
+OMP refreshes before expiry, single-flights by durable row ID, and uses SQLite leases for cross-process ownership. [`auth-storage.ts`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/ai/src/auth-storage.ts#L2130-L2339)
 
 _**Pressure test:** a file lock around the whole store may be correct but too coarse once multiple accounts and long-lived refresh flows exist._
 
 ### 4. Auth identity and model metadata stay separate
 
-OMP’s auth registry and `pi-catalog` are distinct; compile-time checks connect provider IDs without merging responsibilities. [`registry/types.ts`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/packages/ai/src/registry/types.ts#L1-L55)
+OMP’s auth registry and `pi-catalog` are distinct; compile-time checks connect provider IDs without merging responsibilities. [`registry/types.ts`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/ai/src/registry/types.ts#L1-L55)
 
 _**Pressure test:** a provider may share model metadata with another route while requiring different login, account, or transport behavior._
 
@@ -91,21 +91,27 @@ OMP’s model manager resolves:
 bundled static → models.dev fallback → cache → dynamic provider discovery
 ```
 
-Later sources override earlier model IDs; authoritative provider discovery may prune static-only entries. [`model-manager.ts`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/packages/catalog/src/model-manager.ts#L104-L174)
+Later sources override earlier model IDs; authoritative provider discovery may prune static-only entries. [`model-manager.ts`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/catalog/src/model-manager.ts#L104-L174)
 
 _**Pressure test:** availability, metadata enrichment, and provider-authoritative discovery need different merge semantics._
 
 ### 6. YAML is an override and custom-provider surface
 
-`models.yml` / `models.yaml` can define custom providers/models, override built-ins, configure discovery and headers, and express model equivalence. [`docs/models.md`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/docs/models.md#L15-L109)
+`models.yml` / `models.yaml` can define custom providers/models, override built-ins, configure discovery and headers, and express model equivalence. [`docs/models.md`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/docs/models.md#L15-L109)
 
 _**Pressure test:** built-ins should work without YAML, while compatible custom endpoints should not require Rust code._
 
 ### 7. Documentation maps source to authority
 
-OMP’s development guide names authoritative subsystem documents rather than duplicating their contents. [`DEVELOPMENT.md`](https://github.com/can1357/oh-my-pi/blob/d5cd24f39a951bfbd50dc8f50bcf095d59694d6c/packages/coding-agent/DEVELOPMENT.md#L1-L10)
+OMP’s development guide names authoritative subsystem documents rather than duplicating their contents. [`DEVELOPMENT.md`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/coding-agent/DEVELOPMENT.md#L1-L10)
 
 _**Pressure test:** an architecture dossier needs explicit document ownership or it will drift into multiple competing explanations._
+
+### 8. Authoritative provider charges reconcile local estimates
+
+For OpenRouter, OMP treats a valid provider-reported account charge as the final total and proportionally rescales estimated cost components to match; when pricing metadata is unavailable, it preserves additive accounting by assigning the reported total to input cost. [`openai-shared.ts`](https://github.com/can1357/oh-my-pi/blob/03c48d073bd4849726cc14750b5aecfa310bdf26/packages/ai/src/providers/openai-shared.ts#L341-L362)
+
+_**Pressure test:** catalog prices are estimates; when a provider returns an authoritative charge with the response, normalized usage should preserve that total without turning quota or billing endpoints into per-request probes._
 
 ---
 

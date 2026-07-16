@@ -4,7 +4,7 @@ Guidance for humans and coding agents working in `open-grok`.
 
 ## What this repository is
 
-`open-grok` is an independent community fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build), owned by `victor-software-house`.
+`open-grok` is an independent community fork of [`xai-org/grok-build`](https://github.com/xai-org/grok-build), owned by the open-grok organization.
 
 The project preserves Grok Build's exceptional Rust TUI and agent runtime while opening provider choice, authentication, model discovery, and account management.
 
@@ -12,17 +12,7 @@ It is not affiliated with, endorsed by, or supported by xAI.
 
 ## Current phase
 
-The repository is in **architecture and foundation** work.
-
-Before implementation:
-
-1. understand the published source;
-2. document current behavior with pinned evidence;
-3. run goal discovery, interview, and fact review;
-4. review and approve the invariant objective and phased plan;
-5. implement only the active approved phase.
-
-Do not turn roadmap ideas into code before their phase is approved.
+The source-pinned architecture dossier and provider-platform goal and plan are accepted. Foundation and session implementation proceeds through the active approved checkpoints. Code outside the active phase is forbidden.
 
 ## Sources of truth
 
@@ -31,8 +21,11 @@ Do not turn roadmap ideas into code before their phase is approved.
 | Current Grok behavior | Pinned `xai-org/grok-build` source mirrored in this fork |
 | Repository architecture | [`docs/architecture/`](docs/architecture/) |
 | Evidence revisions | [`docs/architecture/source-ledger.md`](docs/architecture/source-ledger.md) |
+| Accepted decisions | [`docs/decisions/`](docs/decisions/) |
+| Upstream imports | [`docs/upstream/`](docs/upstream/) |
+| User-visible history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Design patterns | Pi first, latest upstream OMP second |
-| Long-running objective | Discovery placeholder under [`goals/open-grok-provider-platform/`](goals/open-grok-provider-platform/) until an objective and plan are reviewed and approved |
+| Long-running objective | [`goals/open-grok-provider-platform/goal.md`](goals/open-grok-provider-platform/goal.md), governed by the accepted facts, approved plan, invariant controller, and mutable execution state in that directory |
 | Coding rules | [`CODING_STANDARDS.md`](CODING_STANDARDS.md) |
 
 Private local forks and research repositories may suggest questions, but they are not authoritative evidence of upstream Pi or OMP behavior.
@@ -71,6 +64,9 @@ Start with:
 - **Trust remains explicit.** Marketplace installation does not imply executable-plugin trust.
 - **Grok remains first-party, not global.** xAI-specific headers, patches, OAuth, catalogs, and remote services must not leak into generic provider behavior.
 - **Catalog data is not transport policy.** External model metadata cannot replace provider-specific auth, protocol, and compatibility logic.
+- **Upstream rewrites are migrations.** Verify named upstream heads directly, preserve reviewed roots, and audit unrelated replacement histories before integrating them; never reset this fork to follow a rewritten root.
+- **Ownership precedes work.** Before investigating, repairing, cleaning, or expanding verification over source, establish that the baseline is current and whether `open-grok` explicitly owns and maintains that surface. Imported upstream is a dependency and provenance baseline, not an automatic backlog.
+- **Product work outranks inherited cleanup.** Never spend effort improving a disposable or soon-to-be-replaced upstream/generated snapshot while delaying integration or `open-grok`-owned product work. Tool output does not create scope.
 
 ## Reference hierarchy
 
@@ -83,9 +79,17 @@ Extract patterns in this order:
 
 Do not copy TypeScript application structure blindly into Rust. Extract laws, contracts, and test cases.
 
-## Generated and vendored boundaries
+## Generated, vendored, and upstream-owned boundaries
 
-- The root `Cargo.toml` is generated upstream. Treat it as read-only unless the generation source and sync process are understood.
+- Before doing work on a path, establish whether `open-grok` owns and will maintain it, whether it belongs to the current integration baseline, and whether the work directly advances an accepted product requirement. If any answer is no, stop.
+- Never investigate-to-fix, repair, clean up, refactor, harden, or broaden validation over generated, vendored, mirrored, imported, or upstream-owned source merely because defects or warnings exist. Such findings do not become `open-grok` work by being visible.
+- Never improve a mutable upstream snapshot that is about to be replaced or synchronized. Integrate the current baseline first; then address only blockers to accepted `open-grok` behavior.
+- Lack of an upstream CI profile, failing test, warning, or awkward implementation does not transfer ownership to `open-grok`.
+- Clippy and other tools are secondary diagnostics, not authorities, specifications, or work queues. Tool output never creates scope.
+- Broad formatting, lint, and zero-warning gates apply only to code `open-grok` explicitly owns and maintains.
+- The root `Cargo.toml` and `crates/codegen/**` are generated/upstream-owned surfaces. Treat them as read-only for hygiene work unless `open-grok` explicitly accepts ongoing maintenance ownership.
+- Modify generated or upstream-owned source only for a concrete product requirement, verified build/runtime/security blocker, or intentional fork patch. Document the upstream revision, reason, narrow scope, maintenance owner, and focused verification; review it separately from upstream synchronization.
+- Validate upstream snapshots with their published profile and focused application/integration checks. If upstream publishes no broad profile, do not invent a universal workspace lint or test gate for its source.
 - Generated protobuf Rust belongs to the owning build pipeline.
 - `third_party/` retains its own licenses and notices.
 - Preserve `LICENSE`, `THIRD-PARTY-NOTICES`, crate-local notices, and `third_party/NOTICE`.
@@ -104,7 +108,7 @@ Do not copy TypeScript application structure blindly into Rust. Extract laws, co
 ## Documentation contract
 
 - Current-state claims use commit-pinned public links.
-- Mirrored Grok source links should stay inside `victor-software-house/open-grok`.
+- Mirrored Grok source links should stay inside `open-grok/open-grok`.
 - Pi/OMP/models.dev links point to their pinned upstream repositories.
 - Label facts, inference, recommendations, proposals, and unresolved questions distinctly.
 - Update the authoritative owner document instead of duplicating architecture prose.
@@ -112,30 +116,37 @@ Do not copy TypeScript application structure blindly into Rust. Extract laws, co
 
 ## Validation
 
-Target the crates and behavior changed; full-workspace builds are expensive.
+Classify ownership before choosing commands. Never run a broad formatter or linter over generated, vendored, mirrored, imported, or upstream-owned source as an `open-grok` cleanup gate.
+
+For an `open-grok`-owned and maintained Rust crate, target only the crate and behavior changed:
 
 ```sh
-cargo fmt --all --check
-cargo check -p <crate>
-cargo test -p <crate>
-cargo clippy -p <crate> -- -D warnings
+cargo fmt -p <owned-crate> --check
+cargo check -p <owned-crate>
+cargo test -p <owned-crate>
+cargo clippy -p <owned-crate> -- -D warnings
 ```
+
+For upstream snapshots, run the upstream-published profile plus focused application/integration checks. A diagnostic outside owned scope is evidence to classify, not work to perform.
 
 For runtime changes, exercise the affected flow end to end in addition to static checks.
 
 Completion requires:
 
 - relevant tests pass;
-- clippy has **zero warnings** for the changed scope;
-- formatting passes;
+- valid diagnostics are resolved in the scope `open-grok` owns and maintains;
+- owned formatting passes;
 - documentation links remain valid;
 - the working tree contains no unexplained changes.
 
 ## Git and delivery
 
-- `origin` is `victor-software-house/open-grok`.
+- `origin` is `open-grok/open-grok`.
 - `upstream` is `xai-org/grok-build`.
 - Keep fork changes auditable and separate from upstream sync commits.
+- Every upstream import or evidence-pin advancement updates [`docs/upstream/`](docs/upstream/) and the root [`CHANGELOG.md`](CHANGELOG.md) when user-visible.
+- Every code synchronization uses an isolated `sync/*` pull request, required CI, and independent review; never push imported code directly to `main`.
+- Consequential technical and product/process choices receive ADRs or PDRs under [`docs/decisions/`](docs/decisions/); supersede accepted records instead of rewriting their rationale.
 - Use Conventional Commits unless the repository later adopts a stricter convention.
 - No AI attribution, generated-by footer, or bot co-author trailer.
 - Commit and push coherent verified changes; do not leave completed work local-only.

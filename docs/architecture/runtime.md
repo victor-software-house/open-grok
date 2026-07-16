@@ -1,10 +1,10 @@
 # Runtime architecture
 
-Baseline: [`xai-org/grok-build@c1b5909`](https://github.com/victor-software-house/open-grok/tree/c1b5909ec707c069f1d21a93917af044e71da0d7).
+Baseline: [`xai-org/grok-build@c1b5909`](https://github.com/open-grok/open-grok/tree/c1b5909ec707c069f1d21a93917af044e71da0d7).
 
 ## Runtime modes
 
-`xai-grok-pager-bin` creates a multithread Tokio runtime, parses `PagerArgs`, dispatches the selected mode, and force-shuts the runtime down after a **two-second** grace period. [`main.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager-bin/src/main.rs#L1456-L1528)
+`xai-grok-pager-bin` creates a multithread Tokio runtime, parses `PagerArgs`, dispatches the selected mode, and force-shuts the runtime down after a **two-second** grace period. [`main.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager-bin/src/main.rs#L1456-L1528)
 
 Supported surfaces include:
 
@@ -15,7 +15,7 @@ Supported surfaces include:
 - shared leader mode;
 - management subcommands.
 
-The CLI also owns session/worktree choices, permission seeds, subagent settings, and background-wait behavior. [`cli.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/app/cli.rs#L383-L726)
+The CLI also owns session/worktree choices, permission seeds, subagent settings, and background-wait behavior. [`cli.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/app/cli.rs#L383-L726)
 
 ## Execution ownership
 
@@ -29,7 +29,7 @@ The CLI also owns session/worktree choices, permission seeds, subagent settings,
 | **Tool set** | Concurrent futures inside session | Permissioned tool calls and results |
 | **Subagent** | Independent child session thread | Child conversation, tools, persistence, optional worktree |
 
-Direct ACP mode deliberately isolates `MvpAgent` on `acp-agent-worker`; callers communicate through the typed gateway. [`spawn.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/acp/spawn.rs#L33-L129)
+Direct ACP mode deliberately isolates `MvpAgent` on `acp-agent-worker`; callers communicate through the typed gateway. [`spawn.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/acp/spawn.rs#L33-L129)
 
 ## ACP boundary
 
@@ -38,7 +38,7 @@ Direct ACP mode deliberately isolates `MvpAgent` on `acp-agent-worker`; callers 
 - Incoming methods dispatch into local tasks.
 - Session notifications are fire-and-forget so a degraded relay cannot stall sampling or the session actor.
 
-See [`xai-acp-lib/src/gateway.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-acp-lib/src/gateway.rs#L171-L230) and its notification path at [`gateway.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-acp-lib/src/gateway.rs#L447-L469).
+See [`xai-acp-lib/src/gateway.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-acp-lib/src/gateway.rs#L171-L230) and its notification path at [`gateway.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-acp-lib/src/gateway.rs#L447-L469).
 
 ## Turn sequence
 
@@ -59,7 +59,7 @@ terminal input
   → next sampling iteration or final PromptResponse
 ```
 
-The TUI loop remains thin: it multiplexes terminal input, ACP messages, spawned task results, timers, progress, hot configuration, and leader state. It batches up to **32 ACP messages** and avoids draining ACP while terminal input is buffered. [`event_loop.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/app/event_loop.rs#L1656-L1735)
+The TUI loop remains thin: it multiplexes terminal input, ACP messages, spawned task results, timers, progress, hot configuration, and leader state. It batches up to **32 ACP messages** and avoids draining ACP while terminal input is buffered. [`event_loop.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/app/event_loop.rs#L1656-L1735)
 
 ## Session isolation
 
@@ -73,7 +73,7 @@ A `SessionActor` owns:
 - subagent coordination;
 - session-scoped MCP and execution state.
 
-The external `SessionHandle` is cloneable; the actor remains thread-affine and non-`Send`. [`spawn.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/spawn.rs#L1573-L1664)
+The external `SessionHandle` is cloneable; the actor remains thread-affine and non-`Send`. [`spawn.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/spawn.rs#L1573-L1664)
 
 ## Sampling lifecycle
 
@@ -84,7 +84,7 @@ The external `SessionHandle` is cloneable; the actor remains thread-affine and n
 - Each request owns an event stream and completion oneshot.
 - The turn waits up to **five seconds** for the event-drainer barrier before processing post-response tool calls.
 
-See [`actor/mod.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampler/src/actor/mod.rs#L60-L143) and [`sampler_turn.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/sampler_turn.rs#L848-L913).
+See [`actor/mod.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampler/src/actor/mod.rs#L60-L143) and [`sampler_turn.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/sampler_turn.rs#L848-L913).
 
 ### Retry and recovery
 
@@ -97,7 +97,7 @@ The request task can:
 - rebuild the client for HTTP/1.1 after connection failures;
 - terminate with a normalized `Failed` event.
 
-Cancellation is checked before and during each attempt. [`request_task.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampler/src/actor/request_task.rs#L73-L408)
+Cancellation is checked before and during each attempt. [`request_task.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampler/src/actor/request_task.rs#L73-L408)
 
 ## Tool execution
 
@@ -112,9 +112,9 @@ Tool calls move through a fixed gate:
 7. emit status/output and post-tool hooks;
 8. append a model-visible tool result.
 
-Plan-mode restrictions apply before the general permission path, including in otherwise auto-approved modes. [`tool_calls.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tool_calls.rs#L741-L1199)
+Plan-mode restrictions apply before the general permission path, including in otherwise auto-approved modes. [`tool_calls.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tool_calls.rs#L741-L1199)
 
-Approved calls use `FuturesUnordered`; writes to the same target path serialize through a per-path Tokio mutex. Interruptible wait tools race pending user interjection. [`tool_calls.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tool_calls.rs#L387-L739)
+Approved calls use `FuturesUnordered`; writes to the same target path serialize through a per-path Tokio mutex. Interruptible wait tools race pending user interjection. [`tool_calls.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tool_calls.rs#L387-L739)
 
 ## Cancellation
 
@@ -126,7 +126,7 @@ ACP cancellation becomes `SessionCommand::Cancel`.
 - Background terminal tasks are not automatically killed by this path.
 - The cancelled ACP prompt is resolved so the caller cannot hang.
 
-See [`tasks_cancel.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tasks_cancel.rs#L222-L400).
+See [`tasks_cancel.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tasks_cancel.rs#L222-L400).
 
 ## Subagents
 
@@ -138,7 +138,7 @@ A subagent is a **complete child session**, not a lightweight future.
 - Foreground children hold a parent wait guard.
 - Expired or orphaned foreground waits detach the child to background rather than killing it.
 
-See [`handle_request.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/agent/subagent/handle_request.rs#L1049-L1385).
+See [`handle_request.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/agent/subagent/handle_request.rs#L1049-L1385).
 
 ## Shutdown
 
@@ -151,7 +151,7 @@ After the loop:
 - ACP cancels;
 - process-scoped children are killed.
 
-Session shutdown separately flushes replay state, runs `SessionEnd`/`Stop` hooks, persists memory/background-task state, cancels feedback sync, and ends the actor loop. [`run_loop.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/run_loop.rs#L772-L817)
+Session shutdown separately flushes replay state, runs `SessionEnd`/`Stop` hooks, persists memory/background-task state, cancels feedback sync, and ends the actor loop. [`run_loop.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/run_loop.rs#L772-L817)
 
 ## Invariants for future work
 
@@ -164,7 +164,7 @@ Session shutdown separately flushes replay state, runs `SessionEnd`/`Stop` hooks
 
 ## Test anchors
 
-- CLI modes: [`cli.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/app/cli.rs#L880-L1180)
-- ACP ordering/replay: [`gateway.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-acp-lib/src/gateway.rs#L563-L694)
-- Sampler error conversion: [`request_task.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampler/src/actor/request_task.rs#L747-L861)
-- Cancellation slots: [`tasks_cancel.rs`](https://github.com/victor-software-house/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tasks_cancel.rs#L618-L689)
+- CLI modes: [`cli.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-pager/src/app/cli.rs#L880-L1180)
+- ACP ordering/replay: [`gateway.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-acp-lib/src/gateway.rs#L563-L694)
+- Sampler error conversion: [`request_task.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-sampler/src/actor/request_task.rs#L747-L861)
+- Cancellation slots: [`tasks_cancel.rs`](https://github.com/open-grok/open-grok/blob/c1b5909ec707c069f1d21a93917af044e71da0d7/crates/codegen/xai-grok-shell/src/session/acp_session_impl/tasks_cancel.rs#L618-L689)

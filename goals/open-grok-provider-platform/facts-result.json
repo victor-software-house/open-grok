@@ -1,0 +1,363 @@
+{
+  "decision": "submitted",
+  "stage": "facts",
+  "result": {
+    "stage": "facts",
+    "title": "open-grok provider platform facts — final direct intent interview",
+    "goalSlug": "open-grok-provider-platform",
+    "facts": [
+      {
+        "id": "preserve-product",
+        "text": "Provider-platform and session-repository work preserves or improves the full-screen Pager TUI, ACP and headless modes, normalized sampling, compaction, rewind, subagents, sandboxing, exact node-addressable resume, durable session behavior, and tool-policy configurability. Ordinary operation follows Pi's permissive/yolo default so routine tools do not interrupt the user, while operators may choose stricter policies and hard plan-mode, sandbox, trust, and explicit safety boundaries still precede execution. All new first-class state lives under `~/.open-grok`; normal operation neither scans nor reuses legacy Grok session files, and any legacy import is an optional explicit operator command behind its own verified compatibility gate.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      },
+      {
+        "id": "native-rust",
+        "text": "Provider, authentication, account, catalog, discovery, protocol, usage, and dynamic-tool ownership is native Rust; Pi is the primary provider/tool reference, OpenAI Codex is a Rust reference for Codex authentication, OMP pressure-tests broader operational behavior, and no Bun/Node sidecar is required for normal operation.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "grok-first-party",
+        "text": "Grok/xAI subscription OAuth remains a first-class provider with compatibility for existing Grok Build login, inference, reasoning, tool streaming, session affinity, and xAI-specific request behavior.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "provider-families",
+        "text": "The first release commits to subscription OAuth providers, core API-key providers, cloud-identity providers, and local/gateway engines; OMP's remaining long tail is tracked parity work rather than a blocker for the first usable release.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": false,
+        "recommendedAutomatedVerification": false,
+        "comment": null
+      },
+      {
+        "id": "login-ux",
+        "text": "A searchable `/login [provider]` flow supports OAuth, API-key, transient ambient credentials such as environment variables or cloud identity, and keyless providers; it reports authenticated account identity and exposes account login, selection, status, and logout without provider-specific TUI code or automatic persistence of ambient credentials.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "provider-registry",
+        "text": "One compiled provider definition is the source for provider identity, auth methods, environment fallbacks, catalog sources, discovery behavior, protocol adapter, usage adapter, compatibility policy, and normalized capabilities; user configuration may override only documented fields.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "yaml-custom-providers",
+        "text": "Built-in providers work without configuration, while a dedicated YAML file under `~/.open-grok` supports compatible custom providers, custom models, provider/model overrides, headers, discovery, tool-provider routing, and model equivalence without requiring Rust changes.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "encrypted-credential-store",
+        "text": "Provider credentials are isolated from shared configuration in a dedicated SQLite store under `~/.open-grok`; secret values are versioned XChaCha20-Poly1305 ciphertext blobs, and plaintext tokens or API keys are never persisted in TOML, YAML, JSON configuration, logs, or ordinary database columns.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "master-key-custody",
+        "text": "The credential-store master key is random, installation-scoped, and held by macOS Keychain, Windows Credential Manager, or Linux Secret Service; headless Linux requires explicit external secret delivery and fails closed when no safe key source is available.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "credential-rotation",
+        "text": "Credential encryption supports resumable key rotation with per-row key versions, fresh nonces, authenticated row identity, old-key retention until verification, and no destructive overwrite after decryption or authentication failure.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "multi-account-routing",
+        "text": "Each provider can store multiple credentials with durable credential IDs, explicit account selection, deterministic session affinity, non-session rotation, provider-aware quota blocking, and failover to a healthy sibling account.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "refresh-concurrency",
+        "text": "OAuth refresh is single-flight per credential in-process and coordinated across processes with durable leases; transient failures preserve the credential, definitive failures disable only the affected credential, and refresh never silently falls back to a different auth source.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "legacy-auth-migration",
+        "text": "New first-class credential management lives under `~/.open-grok`; normal startup neither scans nor reuses legacy `~/.grok/auth.json`. An optional explicit operator command may import selected legacy credentials non-destructively through resumable, rollback-safe verification, and no legacy file is modified or removed.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "catalog-distribution",
+        "text": "A separate public open-grok catalog repository initially publishes each schema-validated, provenance-tagged snapshot as an immutable GitHub Release asset with a signed manifest and content digest, while GitHub Pages serves only a small signed mutable pointer to the latest immutable snapshot. The application verifies signer identity, schema, monotonic revision, content hash, and release identity before activation; a dedicated catalog service is deferred until static delivery proves insufficient, and repository ownership follows the reviewed organization migration.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      },
+      {
+        "id": "catalog-precedence",
+        "text": "Model resolution precedence is explicit user provider/model overrides, then provider-declared authoritative live discovery, then the last verified open-grok catalog snapshot derived primarily from Pi and supplemented only for Pi-missing OMP-exclusive or OAuth providers, then the embedded recovery seed.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "catalog-freshness",
+        "text": "Model catalog freshness is independent of open-grok releases: TUI and headless commands can inspect and force refresh, normal refresh is conditional, jittered, cached, bounded, failure-tolerant, and offline-capable, and startup retains the last verified snapshot or embedded seed when refresh fails.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "capability-gating",
+        "text": "The model picker and request path use normalized capability metadata for tools, deferred tool loading, reasoning, image input, structured output, context/output limits, provider-native tools, and protocol quirks; unsupported features are disabled or explained explicitly rather than failing late or silently changing behavior.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "tool-provider-routing",
+        "text": "Provider-dependent tools such as web search and media generation have explicit provider/model routing and fallback configuration; xAI-native behavior remains available and may be preferred when xAI is authenticated, while local or alternate-provider implementations can be selected independently from the chat model.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "dynamic-tool-loading",
+        "text": "The session owns one canonical ordered enabled-tool policy and a per-turn provider-neutral tool manifest containing identity, description, and raw schema. Provider/model adapters produce owned wire projections for schema dialect, strictness, cache markers, and lazy-loading annotations, while compatible adapters without reviewed lazy loading receive the full enabled tool set. Model switches reproject the same policy without mutating canonical tool metadata or history, and derived static fragments are memoized by tool-definition revision plus projection flavor while context-varying descriptions use an explicit manifest/context revision.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      },
+      {
+        "id": "prompt-cache-stability",
+        "text": "Canonical session state durably records each immutable single-parent conversation tree, exact attachment cursor, normalized messages and tool results, compaction and rewind boundaries, attachments, and versioned effective model, sampling, prompt, and tool-policy inputs needed to reconstruct request semantics; sibling branches remain intact, UI replay stays separate, and documentation credits Pi's session-tree precedent with pinned provenance. Provider-specific continuation or projection state that affects deterministic next-request semantics may also persist as a rebuildable checkpoint bound to the adapter version, provider, model, credential affinity, parent node, expiry, and complete canonical-input digests. On mismatch, expiry, or provider rejection, open-grok invalidates that checkpoint and deterministically reprojects from canonical state; transport-only cache hints remain disposable, and no-op reconstruction preserves a byte-stable serialized prefix.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      },
+      {
+        "id": "usage-surfaces",
+        "text": "Interactive `/usage` and headless `open-grok usage` expose provider/account quota on a best-effort basis and local token/cost statistics otherwise. Account data refreshes on demand when usage surfaces render or credential selection needs an expired or missing cache entry, using a user- and provider-configurable TTL with a safe jittered default, single-flight coalescing, explicit refresh/invalidation, and last-good stale fallback labeled with its age. Optional provider-specific background polling is disabled by default; when enabled, failures retry with configurable multiplicative backoff, jitter, and a cap, then automatically suspend polling after a configured failure threshold while manual refresh remains available. Refresh never becomes an unconditional per-request quota poll. An authoritative provider-reported response charge overrides catalog-derived estimates, and estimated cost components reconcile to that reported total.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      },
+      {
+        "id": "first-milestone",
+        "text": "Foundation work first establishes project ownership and public Cargo verification, then concentrates implementation pressure on the session experience: almost-invisible infrastructure, instantaneous warm and efficient cold attachment, global search/resume, one local-or-remote `open-grokd`, immutable node-addressable trees, cursor-based resume, bounded asynchronous persistence, and non-destructive provider-context recovery under aggressive Apple Silicon gates. Provider/auth/account/catalog foundations follow with vertical slices for Grok/xAI, Anthropic, OpenAI, one cloud-identity path, and one compatible local or gateway endpoint.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "local-priority",
+        "text": "Local model engines remain supported through established compatible discovery and configuration patterns with focused smoke coverage, but they do not delay hosted-provider correctness, subscription OAuth, cloud identity, or the first provider-platform release.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": false,
+        "recommendedAutomatedVerification": false,
+        "comment": null
+      },
+      {
+        "id": "extension-deferral",
+        "text": "A public provider extension or marketplace ABI is deferred until built-in and YAML-defined providers validate the internal boundaries; current plugin trust, hooks, skills, agents, MCP, and LSP behavior remains intact.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "tool-documentation",
+        "text": "Repository architecture documentation maps the complete tool lifecycle, taxonomy, permissions, MCP integration, local versus provider-side execution, web/media routing, browser/computer boundary, dynamic loading, and test topology, and is updated with each relevant implementation phase.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "verification-matrix",
+        "text": "The project owns public CI and release gates for formatting, supported-platform production compilation, zero-warning linting, public Cargo library tests, credential/catalog/protocol fixtures, documentation and provenance, and empirical TUI/headless provider flows. Session gates compare against current JSONL fixtures only as migration and performance oracles and cover aggressive local attach/search/append/memory SLOs, transport-neutral daemon RPC, all-session query scale, node/cursor concurrency, exact and sanitized derivation, bounded accepted-to-durable persistence, pending-tail crash behavior, provider rejection caused by generated IDs/hashes/signatures, Markdown handoff recovery, optional import rollback, database/application invariant diagnostics, remote transport identity/version negotiation, and truthful execution status. Blocked or unavailable checks are reported explicitly, and releases are not gated on an exhaustive live-provider matrix.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "independent-product",
+        "text": "open-grok evolves into an independently governed product with its own organization, versioning, artifacts, releases, contribution policy, and public delivery systems while preserving Grok Build lineage and compatibility evidence; leaving the GitHub fork network is a staged, reviewed migration rather than a cosmetic or history-rewriting action.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "selective-upstream-intake",
+        "text": "Upstream xAI changes are never applied directly to the default branch. Before the independence cutoff, each reviewed snapshot or range is isolated with exact provenance and replayable fork layers; after the cutoff, candidate changes are classified as pick, port, skip, or do-not-port, and whole-tree synchronization is no longer the default.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "independent-delivery",
+        "text": "open-grok owns reproducible Cargo-based CI, test-support boundaries, security and dependency checks, release automation, changelog, and artifact identity; published xAI Cargo/toolchain/protoc contracts may be reused, but omitted internal Bazel, CI, and release systems are never assumed to validate the public fork.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "organization-migration",
+        "text": "The dedicated `open-grok` GitHub organization is the project home, and migration begins with the existing application repository as immediate foundation work rather than waiting for provider implementation or speculative catalog/service repositories. The transfer occurs only after an operator-approved read-only preflight verifies destination availability, administrator access, critical refs, protected archive continuity, effective default-branch protection, hosted artifacts, and the unchanged dirty local foundation; postflight verification restores equivalent destination protection before local remotes and Mani inventory change. Catalog, documentation/site, reusable tooling, and any future SDK, extension, or service repositories are created separately only when reviewed need exists.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": false,
+        "recommendedAutomatedVerification": false
+      },
+      {
+        "id": "decision-and-change-provenance",
+        "text": "Repository documentation separates user-visible changelog entries, upstream import records, technical ADRs, product/process decision records, architecture evidence, and mutable goal execution state. Accepted decisions are superseded rather than rewritten, claims remain source-pinned, and public records use neutral technical language without credentials, personal data, private endpoints, or conversation/request history.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "session-repository-authority",
+        "text": "One internal all-session `SessionRepository` owns canonical structured session state and coherent global queries. Thin CLI, TUI, ACP, agent, and subagent clients attach to one `open-grokd` endpoint, which may run on the same machine or a remote host. The daemon owns bounded memory-hot sessions and repository ordering; its initial local backend is one SQLite WAL database under `~/.open-grok`, while a reviewed remote database adapter may be configured behind the same repository contract and credentials remain in a separate encrypted store. Client attachment uses a transport-neutral versioned RPC rather than exposing raw database tables as the normal control protocol. Per-session databases, one full runtime per client, fragmented catalogs, and JSONL as normal authority are rejected.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "session-tree-cursors",
+        "text": "Each session is an immutable single-parent, multi-child conversation tree with stable session and node IDs, parent IDs, ordered atomic batches, normalized payloads, attachment references, semantic inputs, and content digests. Every attached CLI, TUI, agent, or subagent owns an independent durable versioned cursor to an exact node and may append only an atomic child chain from that node; concurrent attachments at one parent create valid sibling branches, while labels, bookmarks, and defaults are separate metadata. `sessionId:nodeId` selectors are first-class across CLI, TUI, ACP, and repository APIs; a bare session selector uses a valid attachment/default cursor or the sole leaf and otherwise requires explicit branch selection rather than silently choosing the newest node.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "session-query-management",
+        "text": "The same all-session repository contract powers TUI, ACP, and headless list, search, filter, sort, tree and child inspection, rename, archive, delete, import, export, sync, diagnose, recover, status, and health operations. Ordinary infrastructure is almost invisible: daemon, transport, storage, cache, and persistence detail stays out of routine UX unless explicitly inspected or actionable degradation must be surfaced. The daemon keeps bounded memory-hot session actors, contexts, and query projections for active work and evicts or reconstructs them from canonical state under explicit memory limits. Durable presence leases and attachment status distinguish active, idle, needs-input, background, dormant, stale, orphaned, failed, completed, pending-persistence, conflict, degraded, and unavailable states without treating persisted metadata as proof that execution is alive. Invalid or provider-rejected context is surfaced without overwriting the original session and never triggers automatic transformation.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "session-integrity-performance",
+        "text": "On a reference Apple Silicon machine, the initial gates target warm attachment p95 at or below 10 ms, cold attachment of a 1,000-node session p95 at or below 100 ms, warm search across 10,000 sessions and 5 million nodes p95 at or below 100 ms, visible append at or below 5 ms, accepted-to-durable append p95 at or below 20 ms, and idle daemon RSS at or below 50 MiB; representative fixtures are frozen before the gates become binding. `open-grokd` accepts an append into its ordered in-memory queue and allows inference and tools to progress immediately, while a dedicated writer coalesces and durably commits the tail in the background. Accepted and durable sequence positions remain explicit: graceful shutdown drains the queue, restart recovers every durable position, and sudden machine failure may lose only the not-yet-durable tail rather than delaying interaction or falsely claiming that tail was durable. SQLite WAL with one sequenced writer and separately scheduled checkpoints is the initial benchmark target, not an irreversible engine commitment; another maintained engine replaces it only by winning representative end-to-end gates without recreating a larger custom query layer. Database or application invariant failures are surfaced and quarantined without overwriting canonical sessions; normal recovery focuses on provider-compatible context regeneration rather than generalized in-place database surgery.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      },
+      {
+        "id": "session-exact-derivation",
+        "text": "An exact derive operation can create a new session from any `sessionId:nodeId` by materializing that root-to-node provider-neutral context into a simple ordered chain while preserving messages, reasoning, backend tools, tool-call/result pairing, attachments, model, prompt, and tool-policy semantics. When an external provider rejects otherwise readable context because of tool-call IDs, hashes, thinking signatures, continuation references, or other generated transport values, open-grok preserves the source tree and presents exactly two explicit fresh-session choices rather than transforming automatically or in place: (1) recommended Sanitized Chain, which creates a new session with ordered messages and tool interactions preserved while provider-specific generated values are regenerated or removed, and (2) Markdown Handoff, which writes a readable handoff file and creates a new session whose small initial message tells the agent to inspect that path on demand instead of injecting one huge prompt. Both record source provenance and transformation mode; only exact mode may claim semantic equivalence, while Sanitized Chain and Markdown Handoff optimize compatibility and retained context.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "session-service-backend",
+        "text": "`open-grokd` uses one transport-neutral bidirectional RPC for local and remote attachment. Local clients use a persistent Unix-domain socket or Windows named pipe; stdio supports embedding, diagnostics, and SSH execution; zero-exposure remote attachment uses an SSH-spawned proxy; and persistent remote deployments may enable authenticated encrypted WebSocket/TCP with daemon identity, protocol-version, capability, and overload negotiation. QUIC remains a later measured transport option rather than a first-milestone requirement, and raw UDP is not a session-control protocol. The daemon may place its `SessionRepository` in local SQLite or a reviewed remote database backend, but ordinary clients still attach through RPC so live actors, subscriptions, approvals, append ordering, and recovery do not become database-client responsibilities. Provider credentials are never synchronized through session storage.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      },
+      {
+        "id": "runtime-service-boundary",
+        "text": "Normal TUI, headless, ACP, agent, and subagent clients are thin attachments to an `open-grokd` that may run locally or on any operator-chosen host. The daemon owns the all-session repository, bounded memory-hot session actors and contexts, and execution coordination instead of starting one full independent runtime per client. Local and remote transports share one protocol and persistent multiplexed connections so warm attachment is effectively immediate; active turns and background work continue after client disconnect while the daemon remains healthy. After restart, the daemon recovers durable canonical state, surfaces any lost pending tail or non-recoverable external execution honestly, and offers the two fresh-session context recovery paths instead of hard-failing or overwriting the original session. Storage placement and client transport remain separate configuration choices.",
+        "accepted": true,
+        "removed": false,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true,
+        "comment": null
+      },
+      {
+        "id": "session-migration-interchange",
+        "text": "Legacy Grok sessions are ignored during normal startup. An optional explicit command may import selected legacy `~/.grok` JSON/JSONL sessions non-destructively into `~/.open-grok`, preserving recoverable message order, tool results, reasoning, replay, compaction, rewind, lineage, and effective request inputs while reporting malformed records and leaving originals untouched. A versioned repository bundle provides normal interchange, while JSONL remains only a legacy input or explicitly requested diagnostic export and never a competing authority.",
+        "accepted": true,
+        "removed": false,
+        "comment": null,
+        "automatedVerification": true,
+        "recommendedAutomatedVerification": true
+      }
+    ],
+    "factsMarkdown": "# Facts\n\n- Provider-platform and session-repository work preserves or improves the full-screen Pager TUI, ACP and headless modes, normalized sampling, compaction, rewind, subagents, sandboxing, exact node-addressable resume, durable session behavior, and tool-policy configurability. Ordinary operation follows Pi's permissive/yolo default so routine tools do not interrupt the user, while operators may choose stricter policies and hard plan-mode, sandbox, trust, and explicit safety boundaries still precede execution. All new first-class state lives under `~/.open-grok`; normal operation neither scans nor reuses legacy Grok session files, and any legacy import is an optional explicit operator command behind its own verified compatibility gate.\n- Provider, authentication, account, catalog, discovery, protocol, usage, and dynamic-tool ownership is native Rust; Pi is the primary provider/tool reference, OpenAI Codex is a Rust reference for Codex authentication, OMP pressure-tests broader operational behavior, and no Bun/Node sidecar is required for normal operation.\n- Grok/xAI subscription OAuth remains a first-class provider with compatibility for existing Grok Build login, inference, reasoning, tool streaming, session affinity, and xAI-specific request behavior.\n- The first release commits to subscription OAuth providers, core API-key providers, cloud-identity providers, and local/gateway engines; OMP's remaining long tail is tracked parity work rather than a blocker for the first usable release.\n- A searchable `/login [provider]` flow supports OAuth, API-key, transient ambient credentials such as environment variables or cloud identity, and keyless providers; it reports authenticated account identity and exposes account login, selection, status, and logout without provider-specific TUI code or automatic persistence of ambient credentials.\n- One compiled provider definition is the source for provider identity, auth methods, environment fallbacks, catalog sources, discovery behavior, protocol adapter, usage adapter, compatibility policy, and normalized capabilities; user configuration may override only documented fields.\n- Built-in providers work without configuration, while a dedicated YAML file under `~/.open-grok` supports compatible custom providers, custom models, provider/model overrides, headers, discovery, tool-provider routing, and model equivalence without requiring Rust changes.\n- Provider credentials are isolated from shared configuration in a dedicated SQLite store under `~/.open-grok`; secret values are versioned XChaCha20-Poly1305 ciphertext blobs, and plaintext tokens or API keys are never persisted in TOML, YAML, JSON configuration, logs, or ordinary database columns.\n- The credential-store master key is random, installation-scoped, and held by macOS Keychain, Windows Credential Manager, or Linux Secret Service; headless Linux requires explicit external secret delivery and fails closed when no safe key source is available.\n- Credential encryption supports resumable key rotation with per-row key versions, fresh nonces, authenticated row identity, old-key retention until verification, and no destructive overwrite after decryption or authentication failure.\n- Each provider can store multiple credentials with durable credential IDs, explicit account selection, deterministic session affinity, non-session rotation, provider-aware quota blocking, and failover to a healthy sibling account.\n- OAuth refresh is single-flight per credential in-process and coordinated across processes with durable leases; transient failures preserve the credential, definitive failures disable only the affected credential, and refresh never silently falls back to a different auth source.\n- New first-class credential management lives under `~/.open-grok`; normal startup neither scans nor reuses legacy `~/.grok/auth.json`. An optional explicit operator command may import selected legacy credentials non-destructively through resumable, rollback-safe verification, and no legacy file is modified or removed.\n- A separate public open-grok catalog repository initially publishes each schema-validated, provenance-tagged snapshot as an immutable GitHub Release asset with a signed manifest and content digest, while GitHub Pages serves only a small signed mutable pointer to the latest immutable snapshot. The application verifies signer identity, schema, monotonic revision, content hash, and release identity before activation; a dedicated catalog service is deferred until static delivery proves insufficient, and repository ownership follows the reviewed organization migration.\n- Model resolution precedence is explicit user provider/model overrides, then provider-declared authoritative live discovery, then the last verified open-grok catalog snapshot derived primarily from Pi and supplemented only for Pi-missing OMP-exclusive or OAuth providers, then the embedded recovery seed.\n- Model catalog freshness is independent of open-grok releases: TUI and headless commands can inspect and force refresh, normal refresh is conditional, jittered, cached, bounded, failure-tolerant, and offline-capable, and startup retains the last verified snapshot or embedded seed when refresh fails.\n- The model picker and request path use normalized capability metadata for tools, deferred tool loading, reasoning, image input, structured output, context/output limits, provider-native tools, and protocol quirks; unsupported features are disabled or explained explicitly rather than failing late or silently changing behavior.\n- Provider-dependent tools such as web search and media generation have explicit provider/model routing and fallback configuration; xAI-native behavior remains available and may be preferred when xAI is authenticated, while local or alternate-provider implementations can be selected independently from the chat model.\n- The session owns one canonical ordered enabled-tool policy and a per-turn provider-neutral tool manifest containing identity, description, and raw schema. Provider/model adapters produce owned wire projections for schema dialect, strictness, cache markers, and lazy-loading annotations, while compatible adapters without reviewed lazy loading receive the full enabled tool set. Model switches reproject the same policy without mutating canonical tool metadata or history, and derived static fragments are memoized by tool-definition revision plus projection flavor while context-varying descriptions use an explicit manifest/context revision.\n- Canonical session state durably records each immutable single-parent conversation tree, exact attachment cursor, normalized messages and tool results, compaction and rewind boundaries, attachments, and versioned effective model, sampling, prompt, and tool-policy inputs needed to reconstruct request semantics; sibling branches remain intact, UI replay stays separate, and documentation credits Pi's session-tree precedent with pinned provenance. Provider-specific continuation or projection state that affects deterministic next-request semantics may also persist as a rebuildable checkpoint bound to the adapter version, provider, model, credential affinity, parent node, expiry, and complete canonical-input digests. On mismatch, expiry, or provider rejection, open-grok invalidates that checkpoint and deterministically reprojects from canonical state; transport-only cache hints remain disposable, and no-op reconstruction preserves a byte-stable serialized prefix.\n- Interactive `/usage` and headless `open-grok usage` expose provider/account quota on a best-effort basis and local token/cost statistics otherwise. Account data refreshes on demand when usage surfaces render or credential selection needs an expired or missing cache entry, using a user- and provider-configurable TTL with a safe jittered default, single-flight coalescing, explicit refresh/invalidation, and last-good stale fallback labeled with its age. Optional provider-specific background polling is disabled by default; when enabled, failures retry with configurable multiplicative backoff, jitter, and a cap, then automatically suspend polling after a configured failure threshold while manual refresh remains available. Refresh never becomes an unconditional per-request quota poll. An authoritative provider-reported response charge overrides catalog-derived estimates, and estimated cost components reconcile to that reported total.\n- Foundation work first establishes project ownership and public Cargo verification, then concentrates implementation pressure on the session experience: almost-invisible infrastructure, instantaneous warm and efficient cold attachment, global search/resume, one local-or-remote `open-grokd`, immutable node-addressable trees, cursor-based resume, bounded asynchronous persistence, and non-destructive provider-context recovery under aggressive Apple Silicon gates. Provider/auth/account/catalog foundations follow with vertical slices for Grok/xAI, Anthropic, OpenAI, one cloud-identity path, and one compatible local or gateway endpoint.\n- Local model engines remain supported through established compatible discovery and configuration patterns with focused smoke coverage, but they do not delay hosted-provider correctness, subscription OAuth, cloud identity, or the first provider-platform release.\n- A public provider extension or marketplace ABI is deferred until built-in and YAML-defined providers validate the internal boundaries; current plugin trust, hooks, skills, agents, MCP, and LSP behavior remains intact.\n- Repository architecture documentation maps the complete tool lifecycle, taxonomy, permissions, MCP integration, local versus provider-side execution, web/media routing, browser/computer boundary, dynamic loading, and test topology, and is updated with each relevant implementation phase.\n- The project owns public CI and release gates for formatting, supported-platform production compilation, zero-warning linting, public Cargo library tests, credential/catalog/protocol fixtures, documentation and provenance, and empirical TUI/headless provider flows. Session gates compare against current JSONL fixtures only as migration and performance oracles and cover aggressive local attach/search/append/memory SLOs, transport-neutral daemon RPC, all-session query scale, node/cursor concurrency, exact and sanitized derivation, bounded accepted-to-durable persistence, pending-tail crash behavior, provider rejection caused by generated IDs/hashes/signatures, Markdown handoff recovery, optional import rollback, database/application invariant diagnostics, remote transport identity/version negotiation, and truthful execution status. Blocked or unavailable checks are reported explicitly, and releases are not gated on an exhaustive live-provider matrix.\n- open-grok evolves into an independently governed product with its own organization, versioning, artifacts, releases, contribution policy, and public delivery systems while preserving Grok Build lineage and compatibility evidence; leaving the GitHub fork network is a staged, reviewed migration rather than a cosmetic or history-rewriting action.\n- Upstream xAI changes are never applied directly to the default branch. Before the independence cutoff, each reviewed snapshot or range is isolated with exact provenance and replayable fork layers; after the cutoff, candidate changes are classified as pick, port, skip, or do-not-port, and whole-tree synchronization is no longer the default.\n- open-grok owns reproducible Cargo-based CI, test-support boundaries, security and dependency checks, release automation, changelog, and artifact identity; published xAI Cargo/toolchain/protoc contracts may be reused, but omitted internal Bazel, CI, and release systems are never assumed to validate the public fork.\n- The dedicated `open-grok` GitHub organization is the project home, and migration begins with the existing application repository as immediate foundation work rather than waiting for provider implementation or speculative catalog/service repositories. The transfer occurs only after an operator-approved read-only preflight verifies destination availability, administrator access, critical refs, protected archive continuity, effective default-branch protection, hosted artifacts, and the unchanged dirty local foundation; postflight verification restores equivalent destination protection before local remotes and Mani inventory change. Catalog, documentation/site, reusable tooling, and any future SDK, extension, or service repositories are created separately only when reviewed need exists.\n- Repository documentation separates user-visible changelog entries, upstream import records, technical ADRs, product/process decision records, architecture evidence, and mutable goal execution state. Accepted decisions are superseded rather than rewritten, claims remain source-pinned, and public records use neutral technical language without credentials, personal data, private endpoints, or conversation/request history.\n- One internal all-session `SessionRepository` owns canonical structured session state and coherent global queries. Thin CLI, TUI, ACP, agent, and subagent clients attach to one `open-grokd` endpoint, which may run on the same machine or a remote host. The daemon owns bounded memory-hot sessions and repository ordering; its initial local backend is one SQLite WAL database under `~/.open-grok`, while a reviewed remote database adapter may be configured behind the same repository contract and credentials remain in a separate encrypted store. Client attachment uses a transport-neutral versioned RPC rather than exposing raw database tables as the normal control protocol. Per-session databases, one full runtime per client, fragmented catalogs, and JSONL as normal authority are rejected.\n- Each session is an immutable single-parent, multi-child conversation tree with stable session and node IDs, parent IDs, ordered atomic batches, normalized payloads, attachment references, semantic inputs, and content digests. Every attached CLI, TUI, agent, or subagent owns an independent durable versioned cursor to an exact node and may append only an atomic child chain from that node; concurrent attachments at one parent create valid sibling branches, while labels, bookmarks, and defaults are separate metadata. `sessionId:nodeId` selectors are first-class across CLI, TUI, ACP, and repository APIs; a bare session selector uses a valid attachment/default cursor or the sole leaf and otherwise requires explicit branch selection rather than silently choosing the newest node.\n- The same all-session repository contract powers TUI, ACP, and headless list, search, filter, sort, tree and child inspection, rename, archive, delete, import, export, sync, diagnose, recover, status, and health operations. Ordinary infrastructure is almost invisible: daemon, transport, storage, cache, and persistence detail stays out of routine UX unless explicitly inspected or actionable degradation must be surfaced. The daemon keeps bounded memory-hot session actors, contexts, and query projections for active work and evicts or reconstructs them from canonical state under explicit memory limits. Durable presence leases and attachment status distinguish active, idle, needs-input, background, dormant, stale, orphaned, failed, completed, pending-persistence, conflict, degraded, and unavailable states without treating persisted metadata as proof that execution is alive. Invalid or provider-rejected context is surfaced without overwriting the original session and never triggers automatic transformation.\n- On a reference Apple Silicon machine, the initial gates target warm attachment p95 at or below 10 ms, cold attachment of a 1,000-node session p95 at or below 100 ms, warm search across 10,000 sessions and 5 million nodes p95 at or below 100 ms, visible append at or below 5 ms, accepted-to-durable append p95 at or below 20 ms, and idle daemon RSS at or below 50 MiB; representative fixtures are frozen before the gates become binding. `open-grokd` accepts an append into its ordered in-memory queue and allows inference and tools to progress immediately, while a dedicated writer coalesces and durably commits the tail in the background. Accepted and durable sequence positions remain explicit: graceful shutdown drains the queue, restart recovers every durable position, and sudden machine failure may lose only the not-yet-durable tail rather than delaying interaction or falsely claiming that tail was durable. SQLite WAL with one sequenced writer and separately scheduled checkpoints is the initial benchmark target, not an irreversible engine commitment; another maintained engine replaces it only by winning representative end-to-end gates without recreating a larger custom query layer. Database or application invariant failures are surfaced and quarantined without overwriting canonical sessions; normal recovery focuses on provider-compatible context regeneration rather than generalized in-place database surgery.\n- An exact derive operation can create a new session from any `sessionId:nodeId` by materializing that root-to-node provider-neutral context into a simple ordered chain while preserving messages, reasoning, backend tools, tool-call/result pairing, attachments, model, prompt, and tool-policy semantics. When an external provider rejects otherwise readable context because of tool-call IDs, hashes, thinking signatures, continuation references, or other generated transport values, open-grok preserves the source tree and presents exactly two explicit fresh-session choices rather than transforming automatically or in place: (1) recommended Sanitized Chain, which creates a new session with ordered messages and tool interactions preserved while provider-specific generated values are regenerated or removed, and (2) Markdown Handoff, which writes a readable handoff file and creates a new session whose small initial message tells the agent to inspect that path on demand instead of injecting one huge prompt. Both record source provenance and transformation mode; only exact mode may claim semantic equivalence, while Sanitized Chain and Markdown Handoff optimize compatibility and retained context.\n- `open-grokd` uses one transport-neutral bidirectional RPC for local and remote attachment. Local clients use a persistent Unix-domain socket or Windows named pipe; stdio supports embedding, diagnostics, and SSH execution; zero-exposure remote attachment uses an SSH-spawned proxy; and persistent remote deployments may enable authenticated encrypted WebSocket/TCP with daemon identity, protocol-version, capability, and overload negotiation. QUIC remains a later measured transport option rather than a first-milestone requirement, and raw UDP is not a session-control protocol. The daemon may place its `SessionRepository` in local SQLite or a reviewed remote database backend, but ordinary clients still attach through RPC so live actors, subscriptions, approvals, append ordering, and recovery do not become database-client responsibilities. Provider credentials are never synchronized through session storage.\n- Normal TUI, headless, ACP, agent, and subagent clients are thin attachments to an `open-grokd` that may run locally or on any operator-chosen host. The daemon owns the all-session repository, bounded memory-hot session actors and contexts, and execution coordination instead of starting one full independent runtime per client. Local and remote transports share one protocol and persistent multiplexed connections so warm attachment is effectively immediate; active turns and background work continue after client disconnect while the daemon remains healthy. After restart, the daemon recovers durable canonical state, surfaces any lost pending tail or non-recoverable external execution honestly, and offers the two fresh-session context recovery paths instead of hard-failing or overwriting the original session. Storage placement and client transport remain separate configuration choices.\n- Legacy Grok sessions are ignored during normal startup. An optional explicit command may import selected legacy `~/.grok` JSON/JSONL sessions non-destructively into `~/.open-grok`, preserving recoverable message order, tool results, reasoning, replay, compaction, rewind, lineage, and effective request inputs while reporting malformed records and leaving originals untouched. A versioned repository bundle provides normal interchange, while JSONL remains only a legacy input or explicitly requested diagnostic export and never a competing authority.\n"
+  }
+}

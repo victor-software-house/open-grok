@@ -1,0 +1,152 @@
+{
+  "stage": "interview",
+  "title": "open-grok provider platform",
+  "goalSlug": "open-grok-provider-platform",
+  "questions": [
+    {
+      "id": "runtime-foundation",
+      "prompt": "Which runtime foundation should own provider support?",
+      "description": "Grok already has native Rust Chat Completions, Responses, and Messages adapters. Pi and OMP are TypeScript/Bun references rather than drop-in Rust libraries.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Keep provider, auth, account, catalog, and protocol ownership native in Rust. Use Pi and OMP as source/test references; add an optional compatibility broker only if a specific provider cannot be implemented safely in Rust.",
+      "recommendedOptionIds": ["native-rust"],
+      "options": [
+        {
+          "id": "native-rust",
+          "label": "Native Rust provider plane",
+          "description": "Preserves one runtime and existing actor/event boundaries; ports only proven provider behavior."
+        },
+        {
+          "id": "rust-with-escape-hatch",
+          "label": "Rust core with broker escape hatch",
+          "description": "Native by default, with a versioned optional broker for exceptional unsupported flows."
+        },
+        {
+          "id": "pi-ai-broker",
+          "label": "pi-ai broker as primary",
+          "description": "Broad TypeScript provider reuse, but adds RPC, packaging, credential, cancellation, and version-skew ownership."
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "provider-parity",
+      "prompt": "Which provider families must be first-release commitments?",
+      "description": "Select all mandatory families. Other providers can follow through compatible configuration or later adapters.",
+      "answerMode": "multi-custom",
+      "recommendedAnswer": "Commit to subscription OAuth, core API-key providers, cloud identity, and local/gateway engines; treat OMP's long tail as a tracked parity program rather than blocking the first usable release.",
+      "recommendedOptionIds": [
+        "subscription-oauth",
+        "core-api-key",
+        "cloud-identity",
+        "local-gateway"
+      ],
+      "options": [
+        {
+          "id": "subscription-oauth",
+          "label": "Subscription OAuth",
+          "description": "Grok/xAI, Anthropic subscription, OpenAI Codex, GitHub Copilot, and Google Gemini CLI-style flows."
+        },
+        {
+          "id": "core-api-key",
+          "label": "Core API-key providers",
+          "description": "Anthropic, OpenAI, Google, xAI, OpenRouter, and compatible hosted endpoints."
+        },
+        {
+          "id": "cloud-identity",
+          "label": "Cloud identity providers",
+          "description": "Amazon Bedrock, Google Vertex, and Azure credential chains."
+        },
+        {
+          "id": "local-gateway",
+          "label": "Local and gateway engines",
+          "description": "Ollama, LM Studio, vLLM, LiteLLM, and generic compatible discovery."
+        },
+        {
+          "id": "omp-long-tail",
+          "label": "OMP long-tail parity",
+          "description": "Make nearly every current OMP interactive provider a first-release blocker."
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "credential-storage",
+      "prompt": "What should the local credential-security boundary be?",
+      "description": "Multiple accounts, refresh leases, quota blocking, and session affinity need durable metadata. The question is where secret material itself belongs.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Store account metadata, routing state, leases, and blocks in SQLite; store refresh tokens and API keys in the operating-system credential vault when available, with a protected local fallback and explicit migration/export behavior.",
+      "recommendedOptionIds": ["keychain-plus-sqlite"],
+      "options": [
+        {
+          "id": "keychain-plus-sqlite",
+          "label": "OS vault plus SQLite",
+          "description": "Best local secret boundary; SQLite retains stable account IDs and routing metadata."
+        },
+        {
+          "id": "protected-sqlite",
+          "label": "Protected SQLite only",
+          "description": "OMP-like simplicity with 0600 storage, but secrets remain application-readable database text."
+        },
+        {
+          "id": "broker-first",
+          "label": "Auth broker from day one",
+          "description": "Central refresh-token custody and shared accounts, with much higher initial operational scope."
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "catalog-authority",
+      "prompt": "How should model catalog authority work?",
+      "description": "The project should not hand-maintain model lists. models.dev is rich but mutable and incomplete for transport; authenticated provider discovery can be more authoritative for availability.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Ship a validated models.dev-derived snapshot, refresh metadata asynchronously into a last-known-good cache, and let authenticated provider discovery override availability and provider-specific limits. Support explicit offline mode.",
+      "recommendedOptionIds": ["snapshot-runtime-discovery"],
+      "options": [
+        {
+          "id": "snapshot-runtime-discovery",
+          "label": "Snapshot plus runtime overlays",
+          "description": "Fast/offline startup with fresh metadata and provider-authoritative availability."
+        },
+        {
+          "id": "snapshot-discovery-only",
+          "label": "Snapshot plus provider discovery",
+          "description": "No runtime models.dev dependency; catalog freshness arrives through releases and provider APIs."
+        },
+        {
+          "id": "runtime-catalog-only",
+          "label": "Live catalog at runtime",
+          "description": "Always fresh when online, but startup and model selection depend on an external mutable service."
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "first-milestone",
+      "prompt": "What must the first implementation milestone prove?",
+      "description": "The milestone should be independently useful and validate the architecture before broad provider fan-out.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Land the native provider/auth/account/catalog foundations and prove them vertically through Grok/xAI, Anthropic, OpenAI, and one local compatible engine, including login, account selection, streaming, tools, reasoning, persistence, refresh, failure handling, and TUI model selection.",
+      "recommendedOptionIds": ["foundation-vertical-slices"],
+      "options": [
+        {
+          "id": "foundation-vertical-slices",
+          "label": "Foundation plus vertical slices",
+          "description": "Proves the boundaries across first-party, OAuth/API-key, and local-compatible routes before scaling out."
+        },
+        {
+          "id": "broad-parity-first",
+          "label": "Broad provider parity first",
+          "description": "Treat provider count as the first milestone, accepting more parallel adapter work before architecture hardening."
+        },
+        {
+          "id": "ux-wrapper-first",
+          "label": "Login and picker UX first",
+          "description": "Polish the current custom-model surface before replacing catalog/account internals."
+        }
+      ],
+      "required": true
+    }
+  ]
+}

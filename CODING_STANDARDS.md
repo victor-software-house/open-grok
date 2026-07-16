@@ -16,6 +16,9 @@ Do not reformat, rename, refactor, or remove unrelated code. Mention unrelated p
 ### §1.4 Existing idiom
 Match the surrounding crate's naming, module layout, comments, error handling, and test style.
 
+### §1.5 Ownership and current baseline precede work
+Before investigating-to-fix, repairing, cleaning, refactoring, hardening, or expanding verification over source, establish that the source belongs to the current integration baseline and that `open-grok` explicitly owns and will maintain it. Visible defects, warnings, test failures, or missing upstream validation do not create scope or transfer ownership. Never improve a disposable or soon-to-be-replaced upstream snapshot while delaying integration or `open-grok`-owned product work.
+
 ## §2 Rust boundaries
 
 ### §2.1 Ownership is architecture
@@ -107,7 +110,7 @@ Do not freeze a provider/plugin ABI before multiple built-in and configuration-d
 Behavior-sensitive external claims use commit-pinned public permalinks.
 
 ### §7.2 Repository-local Grok links
-When a mirrored baseline file exists in this fork, link to `victor-software-house/open-grok` at the pinned revision.
+When a mirrored baseline file exists in this fork, link to `open-grok/open-grok` at the pinned revision.
 
 ### §7.3 Reference order
 Use current Grok source first, Pi primary patterns second, and latest upstream OMP secondary patterns third.
@@ -117,6 +120,12 @@ Separate verified facts, local observations, inference, recommendations, proposa
 
 ### §7.5 Single document owner
 Each subsystem contract has one authoritative document. Other pages link to it rather than restating it.
+
+### §7.6 Upstream provenance is verified
+Resolve each named upstream repository, default branch, exact evidence pin, and current head directly; local checkouts do not establish authority or freshness. If upstream rewrites history, preserve the reviewed root and audit the tree-level delta before advancing pins or integrating changes. Never reset or force-replace fork history to follow an unrelated upstream root.
+
+### §7.7 Durable decisions use ADRs and PDRs
+Record consequential technical architecture decisions as ADRs and product, project, release, or maintenance-process decisions as PDRs under `docs/decisions/`. Accepted records are superseded by new records rather than rewritten to conceal prior context or trade-offs.
 
 ## §8 Tests and verification
 
@@ -129,21 +138,33 @@ Run focused crate tests/checks before broader suites.
 ### §8.3 Runtime proof
 Product-source changes require an end-to-end exercise of the affected flow when practical.
 
-### §8.4 No warning debt
-Completion requires zero new or existing warnings in the changed lint scope.
+### §8.4 No warning debt in owned scope
+Completion requires zero new or existing warnings only in the changed scope that `open-grok` explicitly owns and maintains. A warning in generated, vendored, mirrored, imported, or upstream-owned code is not permission to modify that code.
 
-### §8.5 Failure honesty
+### §8.5 Linters are evidence, not authority
+Clippy and other linters are fallible diagnostics, not specifications or work queues. Before acting on a finding, verify file ownership, relevance to the active requirement, semantic correctness, and proportionality. Never perform mechanical cleanup merely because a tool emitted a warning.
+
+### §8.6 Failure honesty
 Report failed, skipped, unavailable, or inconclusive checks exactly. Do not imply verification that did not run.
 
-## §9 Generated, vendored, and licensed code
+## §9 Generated, vendored, and upstream-owned code
 
-### §9.1 Generated ownership
-Edit generation inputs, not generated outputs, unless the repository explicitly designates the output as maintained source.
+### §9.1 Ownership classification precedes tooling
+Before formatting, linting, warning cleanup, or CI design, classify each target as `open-grok`-owned and maintained or as generated, vendored, mirrored, imported, or upstream-owned. Absence of an upstream validation profile does not transfer ownership.
 
-### §9.2 Vendored isolation
+### §9.2 Generated and inherited source is not a hygiene target
+Edit generation inputs rather than outputs. Never format, lint-clean, refactor, warning-fix, or otherwise rewrite generated or upstream-owned source merely to make `open-grok` CI green. This prohibition includes `crates/codegen/**` and the generated root `Cargo.toml` unless an explicit ownership decision supersedes it.
+
+### §9.3 Intentional fork patches are narrow and explicit
+Modify generated or upstream-owned source only for a concrete product requirement, verified build/runtime/security blocker, or accepted intentional fork patch. Record the upstream revision, reason, exact scope, maintenance owner, and focused verification. Do not expand the patch to adjacent warnings or style preferences.
+
+### §9.4 CI follows ownership
+Broad formatting, lint, and zero-warning gates apply only to code `open-grok` explicitly owns and maintains. Validate upstream snapshots using their published profile plus focused application and integration checks. If upstream publishes no broad profile, do not invent a universal workspace lint or test gate for its source.
+
+### §9.5 Vendored isolation
 Do not casually modify `third_party/`; preserve upstream license and notice requirements.
 
-### §9.3 Apache modification notice
+### §9.6 Apache modification notice
 Retain applicable copyright, patent, trademark, attribution, and NOTICE text; mark fork modifications where required.
 
 ## §10 Git history
@@ -159,3 +180,9 @@ Do not add AI attribution, generated-by footers, bot co-author trailers, or agen
 
 ### §10.4 Upstream clarity
 Keep upstream synchronization commits distinguishable from fork-owned product changes.
+
+### §10.5 Upstream change records
+Every imported upstream range or reviewed evidence-pin advancement must update the root changelog when user-visible and add an immutable record under `docs/upstream/` with source revisions, comparison status, preserved lineage, included and rejected scope, verification outcomes, integration commit, and follow-ups.
+
+### §10.6 Upstream code synchronizes through isolated pull requests
+Prepare code imports on `sync/<source>-<revision>`, include one upstream delta only, require CI and independent review, and merge through protected `main`. Architecture reinterpretation, fork-owned remediation, and unrelated cleanup follow separately.
