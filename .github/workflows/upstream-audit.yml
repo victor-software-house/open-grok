@@ -1,0 +1,43 @@
+name: Audit upstream revisions
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: GitHub owner/repository
+        required: true
+        default: xai-org/grok-build
+        type: string
+      reviewed_revision:
+        description: Last reviewed immutable revision
+        required: true
+        type: string
+      candidate_revision:
+        description: Candidate immutable revision
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    name: Compare immutable revisions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Generate comparison report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ inputs.repository }}
+          REVIEWED_REVISION: ${{ inputs.reviewed_revision }}
+          CANDIDATE_REVISION: ${{ inputs.candidate_revision }}
+        run: |
+          scripts/upstream/inspect.sh \
+            "$REPOSITORY" \
+            "$REVIEWED_REVISION" \
+            "$CANDIDATE_REVISION" \
+            "$GITHUB_STEP_SUMMARY"

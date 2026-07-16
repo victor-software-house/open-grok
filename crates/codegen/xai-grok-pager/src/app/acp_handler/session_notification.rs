@@ -546,9 +546,10 @@ pub(super) fn handle_session_notification(notif: &acp::ExtNotification, app: &mu
                     )),
                 };
                 agent.scrollback.push_block(block);
-            } else if let Some(eid) = entry_id {
-                if let Some(entry) = agent.scrollback.get_by_id_mut(eid) {
-                    if let RenderBlock::Subagent(ref mut sb) = entry.block {
+            } else if let Some(eid) = entry_id
+                && let Some(entry) = agent.scrollback.get_by_id_mut(eid)
+            {
+                if let RenderBlock::Subagent(ref mut sb) = entry.block {
                         match status.as_str() {
                             "completed" => {
                                 sb.kind = crate::scrollback::blocks::SubagentBlockKind::Completed {

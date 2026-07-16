@@ -1239,8 +1239,13 @@ mod tests {
         use ratatui::layout::Rect;
         use similar::ChangeTag;
         use xai_grok_pager::diff::DiffLine;
+        use xai_grok_pager::theme::cache as theme_cache;
 
-        let hunk = vec![
+        let _guard = theme_cache::test_lock()
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
+
+        let hunk = vec[
             DiffLine {
                 text: "let x = 1;\n".into(),
                 lo: 10,

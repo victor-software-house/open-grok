@@ -52,8 +52,50 @@ const fn const_str_eq(a: &str, b: &str) -> bool {
 }
 /// Run `f` over the trusted key set — the compiled-in [`EMBEDDED_DEPLOYMENT_CONFIG_PUBKEYS`],
 /// unless the compile-time-excluded test seam overrides it.
+#[cfg(not(feature = "test-support"))]
 fn with_embedded_keys<R>(f: impl FnOnce(&[(&str, &[u8])]) -> R) -> R {
     f(EMBEDDED_DEPLOYMENT_CONFIG_PUBKEYS)
+}
+
+#[cfg(feature = "test-support")]
+type OwnedEmbeddedKeys = Vec<(String, Vec<u8>)>;
+
+#[cfg(feature = "test-support")]
+static TEST_EMBEDDED_KEYS: std::sync::OnceLock<std::sync::Mutex<Option<OwnedEmbeddedKeys>>> =
+    std::sync::OnceLock::new();
+
+#[cfg(feature = "test-support")]
+pub mod test_seam {
+    use super::{OwnedEmbeddedKeys, TEST_EMBEDDED_KEYS};
+
+    pub fn set_embedded_keys(keys: &[(&str, &[u8])]) {
+        let keys: OwnedEmbeddedKeys = keys
+            .iter()
+            .map(|(key_id, public_key)| ((*key_id).to_owned(), (*public_key).to_vec()))
+            .collect();
+        *TEST_EMBEDDED_KEYS
+            .get_or_init(|| std::sync::Mutex::new(None))
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner()) = Some(keys);
+    }
+}
+
+#[cfg(feature = "test-support")]
+fn with_embedded_keys<R>(f: impl FnOnce(&[(&str, &[u8])]) -> R) -> R {
+    let keys = TEST_EMBEDDED_KEYS
+        .get_or_init(|| std::sync::Mutex::new(None))
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+    match keys.as_ref() {
+        Some(keys) => {
+            let keys: Vec<_> = keys
+                .iter()
+                .map(|(key_id, public_key)| (key_id.as_str(), public_key.as_slice()))
+                .collect();
+            f(&keys)
+        }
+        None => f(EMBEDDED_DEPLOYMENT_CONFIG_PUBKEYS),
+    }
 }
 /// Sidecar persisted next to the policy so the load-time gate can re-verify it offline.
 pub const SIGNATURE_SIDECAR_FILE: &str = "managed_config.sig.json";

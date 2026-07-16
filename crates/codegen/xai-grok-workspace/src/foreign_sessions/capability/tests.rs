@@ -44,6 +44,81 @@ fn retained_directory_capability_survives_path_replacement() {
 
 #[cfg(unix)]
 #[test]
+fn alias_spelling_opens_regular_files_and_subroots() {
+    use std::io::Read as _;
+
+    let canonical_parent = tempfile::tempdir().unwrap();
+    let alias_parent = tempfile::tempdir().unwrap();
+    let canonical_root = canonical_parent.path().join("root");
+    let alias_root = alias_parent.path().join("root");
+    let canonical_child = canonical_root.join("child");
+    let alias_child = alias_root.join("child");
+    std::fs::create_dir_all(&canonical_child).unwrap();
+    std::fs::write(canonical_root.join("regular"), "regular").unwrap();
+    std::fs::write(canonical_child.join("nested"), "nested").unwrap();
+    std::fs::write(alias_parent.path().join("sibling"), "sibling").unwrap();
+    std::os::unix::fs::symlink(&canonical_root, &alias_root).unwrap();
+
+    let approved = ApprovedRoot::new(&alias_root).unwrap();
+    let opened = approved
+        .open_regular_file(&alias_root.join("regular"))
+        .unwrap();
+    assert_eq!(
+        opened.path,
+        dunce::canonicalize(canonical_root.join("regular")).unwrap()
+    );
+    let subroot = approved.subroot(&alias_child).unwrap();
+    let mut contents = String::new();
+    let mut opened = subroot
+        .open_regular_file(&alias_child.join("nested"))
+        .unwrap();
+    assert_eq!(
+        opened.path,
+        dunce::canonicalize(canonical_child.join("nested")).unwrap()
+    );
+    opened.file.read_to_string(&mut contents).unwrap();
+    assert_eq!(contents, "nested");
+    assert!(
+        subroot
+            .open_regular_file(&alias_child.join("../regular"))
+            .is_none()
+    );
+    assert!(
+        approved
+            .open_regular_file(&alias_parent.path().join("sibling"))
+            .is_none()
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn alias_spelling_opens_wal_database() {
+    let canonical_parent = tempfile::tempdir().unwrap();
+    let alias_parent = tempfile::tempdir().unwrap();
+    let canonical_root = canonical_parent.path().join("root");
+    let alias_root = alias_parent.path().join("root");
+    std::fs::create_dir_all(&canonical_root).unwrap();
+    std::os::unix::fs::symlink(&canonical_root, &alias_root).unwrap();
+    let canonical_path = canonical_root.join("state.db");
+    let writer = rusqlite::Connection::open(&canonical_path).unwrap();
+    writer
+        .execute_batch(
+            "PRAGMA journal_mode=WAL;
+             CREATE TABLE values_for_test (value INTEGER);
+             INSERT INTO values_for_test VALUES (42);",
+        )
+        .unwrap();
+
+    let approved = ApprovedRoot::new(&alias_root).unwrap();
+    let database = open_sqlite_transaction(&approved, &alias_root.join("state.db")).unwrap();
+    let value: i64 = database
+        .query_row("SELECT value FROM values_for_test", [], |row| row.get(0))
+        .unwrap();
+    assert_eq!(value, 42);
+}
+
+#[cfg(unix)]
+#[test]
 fn bounded_directory_visit_reports_exact_cutoff() {
     let root = tempfile::tempdir().unwrap();
     for index in 0..5 {

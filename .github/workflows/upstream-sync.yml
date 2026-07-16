@@ -1,0 +1,47 @@
+name: Upstream sync contract
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upstream-sync-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: Upstream sync contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out complete history
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Determine synchronization scope
+        id: scope
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          if [[ "$HEAD_REF" == sync/* ]] || [[ ",$LABELS," == *,upstream-sync,* ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate isolated synchronization
+        if: steps.scope.outputs.enabled == 'true'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: scripts/upstream/validate-pr.sh "$BASE_SHA" "$HEAD_SHA" "$HEAD_REF"
+
+      - name: Report ordinary pull request
+        if: steps.scope.outputs.enabled != 'true'
+        run: echo 'This pull request is not classified as an upstream synchronization.'

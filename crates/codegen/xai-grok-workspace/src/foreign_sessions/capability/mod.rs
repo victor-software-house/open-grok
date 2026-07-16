@@ -16,6 +16,8 @@ mod windows;
 #[derive(Debug, Clone)]
 pub(super) struct ApprovedRoot {
     path: PathBuf,
+    #[cfg(unix)]
+    approved_path: PathBuf,
     directory: Arc<File>,
 }
 
@@ -67,6 +69,15 @@ impl Drop for ReadTransactionSqlite {
 
 impl ApprovedRoot {
     pub fn new(path: &Path) -> Option<Self> {
+        #[cfg(unix)]
+        let approved_path = if path.is_absolute() {
+            path.to_path_buf()
+        } else {
+            std::env::current_dir().ok()?.join(path)
+        };
+        #[cfg(unix)]
+        let path = dunce::canonicalize(&approved_path).ok()?;
+        #[cfg(not(unix))]
         let path = dunce::canonicalize(path).ok()?;
         #[cfg(unix)]
         let directory = unix::open_directory_path(&path)?;
@@ -85,6 +96,8 @@ impl ApprovedRoot {
         }
         Some(Self {
             path,
+            #[cfg(unix)]
+            approved_path,
             directory: Arc::new(directory),
         })
     }
@@ -112,7 +125,8 @@ impl ApprovedRoot {
                 return None;
             }
             Some(Self {
-                path: self.path.join(relative),
+                path: self.path.join(&relative),
+                approved_path: self.approved_path.join(relative),
                 directory: Arc::new(directory),
             })
         }
@@ -156,7 +170,16 @@ impl ApprovedRoot {
 
     fn relative_path(&self, path: &Path) -> Option<PathBuf> {
         let relative = if path.is_absolute() {
-            path.strip_prefix(&self.path).ok()?
+            #[cfg(unix)]
+            {
+                path.strip_prefix(&self.path)
+                    .or_else(|_| path.strip_prefix(&self.approved_path))
+                    .ok()?
+            }
+            #[cfg(not(unix))]
+            {
+                path.strip_prefix(&self.path).ok()?
+            }
         } else {
             path
         };

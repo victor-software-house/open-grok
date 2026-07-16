@@ -1,0 +1,23 @@
+name: Set up Rust
+
+description: Install the repository toolchain and restore Cargo caches.
+
+inputs:
+  cache-key:
+    description: Additional cache partition key.
+    required: false
+    default: default
+
+runs:
+  using: composite
+  steps:
+    - name: Install Rust toolchain
+      uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1
+      with:
+        components: rustfmt, clippy
+
+    - name: Restore Rust cache
+      uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+      with:
+        shared-key: ${{ inputs.cache-key }}
+        cache-targets: false

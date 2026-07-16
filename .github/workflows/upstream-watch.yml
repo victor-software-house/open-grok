@@ -1,0 +1,40 @@
+name: Watch xAI upstream
+
+on:
+  schedule:
+    - cron: "17 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  head:
+    name: Compare reviewed and current heads
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Compare xAI default branch with reviewed evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          row=$(grep -F '| [`xai-org/grok-build`]' docs/architecture/source-ledger.md)
+          reviewed=$(grep -oE '[0-9a-f]{40}' <<<"$row" | head -n 1)
+          branch=$(gh api repos/xai-org/grok-build --jq '.default_branch')
+          current=$(gh api "repos/xai-org/grok-build/commits/$branch" --jq '.sha')
+
+          {
+            echo '# xAI upstream status'
+            echo
+            echo "- Reviewed revision: \`$reviewed\`"
+            echo "- Current \`$branch\` head: \`$current\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "$reviewed" != "$current" ]]; then
+            echo
+            echo 'A new or rewritten upstream snapshot requires the documented synchronization workflow.' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi

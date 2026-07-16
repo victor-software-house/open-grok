@@ -347,7 +347,14 @@ impl ConfigLayers {
 
 /// `GROK_CAMPAIGNS=0` or `[features] campaigns = false` on pre-campaign base.
 pub fn campaigns_application_disabled(base_effective: &toml::Value) -> bool {
-    if crate::env_bool("GROK_CAMPAIGNS") == Some(false) {
+    campaigns_application_disabled_with_env(crate::env_bool("GROK_CAMPAIGNS"), base_effective)
+}
+
+fn campaigns_application_disabled_with_env(
+    campaigns_env: Option<bool>,
+    base_effective: &toml::Value,
+) -> bool {
+    if campaigns_env == Some(false) {
         return true;
     }
     base_effective
@@ -679,28 +686,18 @@ mod tests {
     }
 
     /// `GROK_CAMPAIGNS=0` disables campaign application regardless of config.
-    /// `GROK_CAMPAIGNS` is process-global, so this test serializes itself with a
-    /// module-local mutex and save/restores the prior value. (This crate has no
-    /// `serial_test` dev-dep and no other test reads this var, so a local guard
-    /// is sufficient.)
     #[test]
     fn kill_switch_env_var_disables() {
-        static ENV_GUARD: std::sync::Mutex<()> = std::sync::Mutex::new(());
-        let _g = ENV_GUARD.lock().unwrap_or_else(|p| p.into_inner());
-        let prior = std::env::var_os("GROK_CAMPAIGNS");
         let empty = toml::Value::Table(Default::default());
+        let config_disabled: toml::Value =
+            toml::from_str("[features]\ncampaigns = false\n").unwrap();
 
-        // SAFETY: ENV_GUARD serializes this against itself; no other test in the
-        // crate mutates or reads GROK_CAMPAIGNS concurrently.
-        unsafe { std::env::set_var("GROK_CAMPAIGNS", "0") };
-        assert!(campaigns_application_disabled(&empty));
-
-        unsafe { std::env::remove_var("GROK_CAMPAIGNS") };
-        assert!(!campaigns_application_disabled(&empty));
-
-        match prior {
-            Some(v) => unsafe { std::env::set_var("GROK_CAMPAIGNS", v) },
-            None => unsafe { std::env::remove_var("GROK_CAMPAIGNS") },
-        }
+        assert!(campaigns_application_disabled_with_env(Some(false), &empty));
+        assert!(!campaigns_application_disabled_with_env(None, &empty));
+        assert!(!campaigns_application_disabled_with_env(Some(true), &empty));
+        assert!(campaigns_application_disabled_with_env(
+            Some(true),
+            &config_disabled
+        ));
     }
 }

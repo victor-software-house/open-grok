@@ -326,10 +326,12 @@ pub fn render_dashboard(
                     panel,
                     peek_reply,
                     &theme,
-                    voice_listening,
-                    voice_interim.as_deref(),
-                    multiline,
-                    Some(layout.list).filter(|r| r.area() > 0),
+                    super::peek::PeekRenderOptions::new(
+                        voice_listening,
+                        voice_interim.as_deref(),
+                        multiline,
+                        Some(layout.list).filter(|r| r.area() > 0),
+                    ),
                 )
             })
             .unwrap_or_default();

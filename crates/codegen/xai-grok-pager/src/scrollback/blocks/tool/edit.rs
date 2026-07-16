@@ -710,6 +710,11 @@ pub struct EditToolCallBlock {
     pub highlight: EditHighlightPhase,
 }
 
+struct EditHeaderPathContext<'a> {
+    cwd: Option<&'a Path>,
+    width: Option<usize>,
+}
+
 impl EditToolCallBlock {
     /// Create a new edit block.
     ///
@@ -838,8 +843,7 @@ impl EditToolCallBlock {
         show_summary: bool,
         dim_details: bool,
         surface: crate::render::tool_paths::ToolPathSurface,
-        cwd: Option<&Path>,
-        width: Option<usize>,
+        path_context: EditHeaderPathContext<'_>,
     ) -> Line<'static> {
         let text_style = if muted {
             theme.muted()
@@ -902,8 +906,8 @@ impl EditToolCallBlock {
         let path = crate::render::tool_paths::path_for_tool_surface(
             &self.path,
             surface,
-            cwd,
-            width,
+            path_context.cwd,
+            path_context.width,
             prefix.len() + suffix_width,
         );
 
@@ -1141,8 +1145,10 @@ impl EditToolCallBlock {
                     show_summary,
                     dim_details,
                     crate::render::tool_paths::ToolPathSurface::Collapsed,
-                    cwd,
-                    Some(ctx.content_width()),
+                    EditHeaderPathContext {
+                        cwd,
+                        width: Some(ctx.content_width()),
+                    },
                 );
                 // Spans: ["Edit ", path, optional suffix spans...]
                 // Only the path span (index 1) is selectable.
@@ -1178,8 +1184,7 @@ impl EditToolCallBlock {
                     show_summary,
                     dim_details,
                     crate::render::tool_paths::ToolPathSurface::Expanded,
-                    cwd,
-                    None,
+                    EditHeaderPathContext { cwd, width: None },
                 );
                 let bullet_indent = ctx
                     .appearance
@@ -1362,8 +1367,10 @@ impl BlockContent for EditToolCallBlock {
             show_summary,
             dim_details,
             crate::render::tool_paths::ToolPathSurface::Fullscreen,
-            ctx.cwd.as_deref(),
-            None,
+            EditHeaderPathContext {
+                cwd: ctx.cwd.as_deref(),
+                width: None,
+            },
         )))
     }
 }
@@ -1466,8 +1473,10 @@ mod tests {
             false,
             false,
             ToolPathSurface::Expanded,
-            None,
-            None,
+            EditHeaderPathContext {
+                cwd: None,
+                width: None,
+            },
         );
         let text: String = header.spans.iter().map(|s| s.content.as_ref()).collect();
         assert_eq!(text, "Edit src/main.rs");
@@ -1484,8 +1493,10 @@ mod tests {
             false,
             false,
             ToolPathSurface::Collapsed,
-            None,
-            Some(80),
+            EditHeaderPathContext {
+                cwd: None,
+                width: Some(80),
+            },
         );
         let text: String = header.spans.iter().map(|s| s.content.as_ref()).collect();
         assert_eq!(text, "Edit main.rs (3 edits)");
@@ -1501,8 +1512,10 @@ mod tests {
             true,
             false,
             ToolPathSurface::Collapsed,
-            None,
-            Some(80),
+            EditHeaderPathContext {
+                cwd: None,
+                width: Some(80),
+            },
         );
         // Spans: ["Edit ", basename, " +1", "/", "-1"] — path stays span 1 so
         // the collapsed arm's selection/link invariant holds. Sole pin of the
@@ -1521,9 +1534,29 @@ mod tests {
         // shapes (diffstat, "(N edits)" fallback) are gated.
         let multi = block.clone().with_edit_count(3);
         for surface in [ToolPathSurface::Expanded, ToolPathSurface::Fullscreen] {
-            let header = block.header_line(&theme, false, true, false, surface, None, None);
+            let header = block.header_line(
+                &theme,
+                false,
+                true,
+                false,
+                surface,
+                EditHeaderPathContext {
+                    cwd: None,
+                    width: None,
+                },
+            );
             assert_eq!(header.spans.len(), 2, "no suffix spans on {surface:?}");
-            let header = multi.header_line(&theme, false, false, false, surface, None, None);
+            let header = multi.header_line(
+                &theme,
+                false,
+                false,
+                false,
+                surface,
+                EditHeaderPathContext {
+                    cwd: None,
+                    width: None,
+                },
+            );
             assert_eq!(
                 header.spans.len(),
                 2,
@@ -1545,8 +1578,10 @@ mod tests {
             true,
             false,
             ToolPathSurface::Collapsed,
-            None,
-            Some(80),
+            EditHeaderPathContext {
+                cwd: None,
+                width: Some(80),
+            },
         );
         let text: String = header.spans.iter().map(|s| s.content.as_ref()).collect();
         assert_eq!(text, "Edit foo.rs");
@@ -1558,8 +1593,10 @@ mod tests {
             true,
             false,
             ToolPathSurface::Collapsed,
-            None,
-            Some(80),
+            EditHeaderPathContext {
+                cwd: None,
+                width: Some(80),
+            },
         );
         let text: String = header.spans.iter().map(|s| s.content.as_ref()).collect();
         assert_eq!(text, "Edit foo.rs (3 edits)");
@@ -1600,8 +1637,10 @@ mod tests {
             false,
             false,
             ToolPathSurface::Expanded,
-            Some(cwd),
-            None,
+            EditHeaderPathContext {
+                cwd: Some(cwd),
+                width: None,
+            },
         );
         let text: String = header.spans.iter().map(|s| s.content.as_ref()).collect();
         assert_eq!(text, "Edit src/foo.rs");

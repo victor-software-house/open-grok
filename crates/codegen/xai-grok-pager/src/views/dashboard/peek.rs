@@ -28,6 +28,30 @@ pub const MAX_RESPONSE_ROWS: usize = 3;
 /// row.
 pub const MAX_REPLY_ROWS: u16 = 6;
 
+/// Rendering inputs supplied by the dashboard around the peek panel state.
+pub struct PeekRenderOptions<'a> {
+    voice_listening: bool,
+    voice_interim: Option<&'a str>,
+    multiline: bool,
+    overlay_area: Option<Rect>,
+}
+
+impl<'a> PeekRenderOptions<'a> {
+    pub fn new(
+        voice_listening: bool,
+        voice_interim: Option<&'a str>,
+        multiline: bool,
+        overlay_area: Option<Rect>,
+    ) -> Self {
+        Self {
+            voice_listening,
+            voice_interim,
+            multiline,
+            overlay_area,
+        }
+    }
+}
+
 // The peek panel's `❯ reply` editor is a full `PromptWidget` (the same
 // component backing the dashboard dispatch box and the agent prompt),
 // so paste chips (`[Pasted: N lines]` + preview/expand), word navigation,
@@ -563,8 +587,8 @@ fn paint_peek_config_badge(
 /// rendering through the shared widget is what gives the reply paste
 /// chips, selection highlighting, and caret-following scroll for free.
 ///
-/// `overlay_area` is the rect above the box for paste-chip text
-/// previews (`None` suppresses them).
+/// [`PeekRenderOptions`] carries voice state, multiline mode, and the rect
+/// above the box for paste-chip text previews (`None` suppresses them).
 ///
 /// Returns the reply caret position (so the caller can park the
 /// terminal cursor) plus the reply input's screen rect (recorded for
@@ -575,10 +599,7 @@ pub fn render_peek_panel(
     panel: &PeekPanelState,
     reply: &mut crate::views::prompt_widget::PromptWidget,
     theme: &Theme,
-    voice_listening: bool,
-    voice_interim: Option<&str>,
-    multiline: bool,
-    overlay_area: Option<Rect>,
+    options: PeekRenderOptions<'_>,
 ) -> PeekRenderResult {
     use crate::views::prompt_widget::PromptStyle;
     use ratatui::widgets::{Block, BorderType, Borders, Widget};
@@ -608,12 +629,12 @@ pub fn render_peek_panel(
     // Covers every peek mode (summary, QA, approval) since it sits on the
     // border, outside the content rows. Painted after the block so it
     // overwrites the plain `╰──╯` fill.
-    paint_peek_config_badge(buf, area, theme, panel, reply, multiline);
+    paint_peek_config_badge(buf, area, theme, panel, reply, options.multiline);
 
     // Record badge on the top border while the mic is hot — the peek panel
     // replaces the dispatch box, so without this a capture started with a row
     // selected would show no indicator.
-    super::render::paint_record_badge(buf, area, theme, voice_listening);
+    super::render::paint_record_badge(buf, area, theme, options.voice_listening);
 
     // Add a 1-cell left + right inset inside the rounded chrome so
     // content doesn't hug the border.
@@ -737,7 +758,7 @@ pub fn render_peek_panel(
                             image_preview: false,
                             ..PromptStyle::default()
                         };
-                        let res = reply.draw(buf, slot, overlay_area, &widget_style, None, None);
+                        let res = reply.draw(buf, slot, options.overlay_area, &widget_style, None, None);
                         if selected && panel.focused {
                             caret = res.cursor_pos;
                         }
@@ -889,10 +910,10 @@ pub fn render_peek_panel(
     // Stream the interim transcript into the reply box (and hide the caret)
     // while dictating, so voice on the dashboard is visible even with a row's
     // peek panel open — it stands in for the dispatch box's voice overlay.
-    let voice_overlay = (voice_listening || voice_interim.is_some()).then_some(
+    let voice_overlay = (options.voice_listening || options.voice_interim.is_some()).then_some(
         crate::views::prompt_widget::VoicePromptOverlay {
-            listening: voice_listening,
-            interim: voice_interim,
+            listening: options.voice_listening,
+            interim: options.voice_interim,
             color: theme.accent_running,
         },
     );
@@ -900,7 +921,7 @@ pub fn render_peek_panel(
         .draw(
             buf,
             text_area,
-            overlay_area,
+            options.overlay_area,
             &widget_style,
             None,
             voice_overlay,
@@ -1441,10 +1462,7 @@ mod tests {
                 &panel,
                 &mut reply,
                 &theme,
-                false,
-                None,
-                false,
-                None,
+                PeekRenderOptions::new(false, None, false, None),
             );
             buf
         };
@@ -1492,10 +1510,7 @@ mod tests {
                 panel,
                 &mut reply,
                 &theme,
-                false,
-                None,
-                false,
-                None,
+                PeekRenderOptions::new(false, None, false, None),
             );
             (0..80)
                 .map(|x| buf[(x, h - 1)].symbol().to_string())
@@ -1607,10 +1622,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            true,
-            Some("hello there"),
-            false,
-            None,
+            PeekRenderOptions::new(true, Some("hello there"), false, None),
         );
         // Badge `" ● rec "` starts at x = area.x + 2, so the dot is at x = 3.
         assert_eq!(
@@ -1687,10 +1699,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -1753,10 +1762,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -1789,10 +1795,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -1827,10 +1830,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         assert!(
             res.caret.is_none(),
@@ -1866,10 +1866,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         assert!(
             res.caret.is_none(),
@@ -1911,10 +1908,7 @@ mod tests {
                 &panel,
                 &mut reply,
                 &theme,
-                false,
-                None,
-                false,
-                None,
+                PeekRenderOptions::new(false, None, false, None),
             );
             buf
         };
@@ -1966,10 +1960,7 @@ mod tests {
                 &panel,
                 &mut reply,
                 &theme,
-                false,
-                None,
-                false,
-                None,
+                PeekRenderOptions::new(false, None, false, None),
             );
             let mut content = String::new();
             for y in 0..buf.area.height {
@@ -2036,10 +2027,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2093,10 +2081,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2147,10 +2132,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2200,10 +2182,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2257,10 +2236,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2320,10 +2296,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2375,10 +2348,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2415,10 +2385,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            None,
+            PeekRenderOptions::new(false, None, false, None),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {
@@ -2460,10 +2427,7 @@ mod tests {
             &panel,
             &mut reply,
             &theme,
-            false,
-            None,
-            false,
-            Some(overlay),
+            PeekRenderOptions::new(false, None, false, Some(overlay)),
         );
         let mut content = String::new();
         for y in 0..buf.area.height {

@@ -137,7 +137,7 @@ impl UserPromptBlock {
             .find(char::is_whitespace)
             .unwrap_or(first_line.len());
         let skill_token_ranges = if token_end > 0 {
-            vec![0..token_end]
+            Vec::from([0..token_end])
         } else {
             Vec::new()
         };

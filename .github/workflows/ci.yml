@@ -1,0 +1,89 @@
+name: Rust CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_INCREMENTAL: "0"
+  CARGO_TERM_COLOR: always
+
+jobs:
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Set up Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: formatting
+      - name: Check formatting
+        run: cargo fmt --all --check
+
+  check:
+    name: Workspace check (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Set up Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: check-${{ runner.os }}
+      - name: Check all targets
+        run: cargo check --workspace --all-targets
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Set up Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: clippy
+      - name: Reject warnings
+        run: cargo clippy --workspace --lib --bins --no-deps -- -D warnings
+
+  tests:
+    name: Workspace library tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Set up Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          cache-key: tests
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@43aecc8d72668fbcfe75c31400bc4f890f1c5853 # v2.83.2
+        with:
+          tool: cargo-nextest
+      - name: Run library tests
+        run: cargo nextest run --workspace --lib
+      - name: Run documentation tests
+        run: cargo test --workspace --doc
